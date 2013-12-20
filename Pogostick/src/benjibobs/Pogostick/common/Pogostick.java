@@ -50,7 +50,7 @@ public class Pogostick {
 	public static Item pogoboots;
 	public final Minecraft mc = FMLClientHandler.instance().getClient();
 	
-	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 175, new int[] {50, 30, 40, 25}, 0);
+	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO",12, new int[] {50, 30, 40, 25}, 0);
 	
 	
 
