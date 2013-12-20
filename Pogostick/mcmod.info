@@ -1,0 +1,20 @@
+[
+{
+  "modid": "bpogostick",
+  "name" : "Pogostick",
+  "description" : "The bukkit plugin becomes a mod!",
+  "version": "1.0",
+  "url": "http://dev.bukkit.org/bukkit-plugins/pogo/",
+  "updateUrl": "",
+  "authorList": [
+    "benjibobs"
+  ],
+  "credits": "benjibobs",
+  "logoFile": "assets/bpogostick/textures/items/logo.png",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
