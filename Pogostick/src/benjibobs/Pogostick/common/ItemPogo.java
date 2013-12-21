@@ -39,7 +39,8 @@ public class ItemPogo extends Item {
 			}
 			
 			if(onground){
-			EntityPlayer.motionY = 0.8;	
+			EntityPlayer.motionY = 0.8;
+			PogostickEvents.pjumped = true;
 			}
 			
 			
