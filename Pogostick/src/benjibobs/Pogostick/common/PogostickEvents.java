@@ -79,17 +79,12 @@ public class PogostickEvents {
 
 		if (event.entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entity;
-			// if((player.inventory.getCurrentItem() != null && tc == false) ||
-			// (mc.theWorld.getBlockId((int)player.lastTickPosX,
-			// (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) ==
-			// Pogostick.tramp.blockID ||
-			// mc.theWorld.getBlockId((int)player.lastTickPosX,
-			// (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) ==
-			// Pogostick.tramp.blockID)){
-			// fallam = 0;
-			// }else{
-			// fallam = event.distance;
-			// }
+			 if(
+			 (mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) == Pogostick.tramp.blockID || mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) == Pogostick.tramp.blockID)){
+			 fallam = 0;
+			 }else{
+			 fallam = event.distance;
+			 }
 
 			int yc = (int) (player.lastTickPosY - 1);
 			int yc2 = (int) (player.lastTickPosY - 2);
@@ -126,7 +121,7 @@ public class PogostickEvents {
 
 			if (player.inventory.armorItemInSlot(0) != null) {
 				ItemStack pogoboots = new ItemStack(Pogostick.pogoboots);
-				if (player.inventory.armorItemInSlot(0).equals(pogoboots)) {
+				if (player.inventory.armorItemInSlot(0).itemID == 7243) {
 					player.motionY = 0.7;
 					jumped = true;
 				}
@@ -139,17 +134,16 @@ public class PogostickEvents {
 	@ForgeSubscribe
 	public void boots(LivingHurtEvent event) {
 
-		if (event.source == DamageSource.fall
-				&& event.entity instanceof EntityPlayer) {
+		if (event.source == DamageSource.fall && event.entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entity;
 			if (player.inventory.armorItemInSlot(0) != null) {
 
 				ItemStack pogoboots = new ItemStack(Pogostick.pogoboots);
-				if (player.inventory.armorItemInSlot(0).equals(pogoboots)) {
+				if (player.inventory.armorItemInSlot(0).itemID == 7243) {
 
 					ItemStack pb = player.inventory.armorItemInSlot(0);
 					int current = pb.getItemDamage();
-					pb.setItemDamage(current + (int) fallam);
+					pb.setItemDamage(current + (int)fallam + 1);
 					event.setCanceled(true);
 
 				}
@@ -165,17 +159,39 @@ public class PogostickEvents {
 		if (event.entity instanceof EntityPlayer
 				&& event.source == DamageSource.fall) {
 			EntityPlayer player = (EntityPlayer) event.entity;
-			// wood pogo start
-
-//			ItemStack wpogo = new ItemStack(Pogostick.wpogo);
-//			if (player.inventory.getCurrentItem().equals(wpogo)) {
-//				if(pjumped == true){
-//				event.setCanceled(true);
-//				player.motionY = 0.6;
-//			}
-//			}
-
-			// wood pogo end
+			//stone pogo start
+			
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7246){
+					if(pjumped){
+						if(!(player.isSneaking())){
+						ItemStack item = player.inventory.getCurrentItem();
+						event.setCanceled(true);
+						player.motionY = 0.8;
+						item.setItemDamage(item.getItemDamage() + 1);
+					}else{
+						pjumped = false;
+					}
+					}
+				}
+			
+			//stone pogo end
+			//iron pogo start
+				
+				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7247){
+					if(pjumped){
+						ItemStack item = player.inventory.getCurrentItem();
+						if(!(player.isSneaking())){
+							event.setCanceled(true);
+							player.motionY = 0.9;
+							item.setItemDamage(item.getItemDamage() + 1);
+						}else{
+							pjumped = false;
+						}
+					}
+					
+				}
+				
+			//iron pogo end
 
 		}
 

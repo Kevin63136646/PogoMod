@@ -9,6 +9,7 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
 import benjibobs.Pogostick.common.handlers.PogostickClientPacketHandler;
@@ -27,6 +28,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraftforge.common.Configuration;
 
 @NetworkMod(clientSideRequired=true,serverSideRequired=true, //Whether client side and server side are needed
@@ -46,16 +50,24 @@ public class Pogostick {
 };
 	
 	public static final String modid = "bpogostick";
+	
 	public static Item bpogo;
 	public static Item wpogo;
-	public static Block tramp;
 	public static Item pogoboots;
-	public final Minecraft mc = FMLClientHandler.instance().getClient();
+	public static Item spogo;
+	public static Item ipogo;
+	public static Item gpogo;
+	
+	public static boolean ground;
+	
+	public static Block tramp;
+	
+	public final MinecraftServer mcs = FMLServerHandler.instance().getServer();
 	
 	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 12, new int[] {1, 1, 1, 1}, 0);
 	
 
-	@Instance("Pogostick") //The instance, this is very important later on
+	@Instance("bpogostick") //The instance, this is very important later on
 	public static Pogostick instance = new Pogostick();
 
 	@SidedProxy(clientSide = "benjibobs.Pogostick.client.PogostickClientProxy", serverSide = "benjibobs.Pogostick.common.PogostickCommonProxy") //Tells Forge the location of your proxies
@@ -76,12 +88,27 @@ public class Pogostick {
 	bpogo = new ItemPogo(6988);
 	bpogo.setUnlocalizedName("bpogostick");
     GameRegistry.registerItem(bpogo, "bpogostick");
-    LanguageRegistry.addName(bpogo, "Pogo Base");
+    LanguageRegistry.addName(bpogo, "Pogostick Template");
     
     wpogo = new ItemWoodPogo(6989);
     wpogo.setUnlocalizedName("woodpogo");
     GameRegistry.registerItem(wpogo, "woodpogo");
     LanguageRegistry.addName(wpogo, "Wooden Pogostick");
+    
+    spogo = new ItemStonePogo(6990);
+    spogo.setUnlocalizedName("stonepogo");
+    GameRegistry.registerItem(spogo, "stonepogo");
+    LanguageRegistry.addName(spogo, "Stone Pogostick");
+    
+    ipogo = new ItemIronPogo(6991);
+    ipogo.setUnlocalizedName("ironpogo");
+    GameRegistry.registerItem(ipogo, "ironpogo");
+    LanguageRegistry.addName(ipogo, "Iron Pogostick");
+    
+    gpogo = new ItemGoldPogo(6992);
+    gpogo.setUnlocalizedName("goldpogo");
+    GameRegistry.registerItem(gpogo, "goldpogo");
+    LanguageRegistry.addName(gpogo, "Gold Pogostick");
     
     tramp = (new BlockTramp(2876, "bouncer"));
     tramp.setUnlocalizedName("bouncer");
@@ -93,9 +120,10 @@ public class Pogostick {
     
     pogoboots = new ItemPogoboots(6987, armorPOGO, 5, 3);
     pogoboots.setUnlocalizedName("pogoboots");
-    LanguageRegistry.addName(pogoboots, "Pogo boots");
+    LanguageRegistry.addName(pogoboots, "Pogo-boots");
     GameRegistry.registerItem(pogoboots, "pogoboots");
-    RenderingRegistry.addNewArmourRendererPrefix("armorPOGO");
+    
+    
     
     //Recipes
     
@@ -106,18 +134,30 @@ public class Pogostick {
     ItemStack slimeStack = new ItemStack(Item.slimeBall);
     ItemStack emeraldStack = new ItemStack(Item.emerald);
     ItemStack woodStack = new ItemStack(Block.planks);
+    ItemStack stoneStack = new ItemStack(Block.stone);
+    ItemStack ironIngotStack = new ItemStack(Item.ingotIron);
+    ItemStack goldIngotStack = new ItemStack(Item.ingotGold);
 
     GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
     GameRegistry.addRecipe(new ItemStack(pogoboots), "   ", "e e", "s s", 'e',emeraldStack,'s', slimeStack);
-    GameRegistry.addRecipe(new ItemStack(wpogo), " w ", " p ", " w ", 'w', woodStack , 'p', pogoStack);
+    GameRegistry.addRecipe(new ItemStack(wpogo), "   ", " p ", " w ", 'w', woodStack , 'p', pogoStack);
+    GameRegistry.addRecipe(new ItemStack(spogo), "   ", " p ", " s ", 'p', pogoStack, 's', stoneStack);
+    GameRegistry.addRecipe(new ItemStack(ipogo), "   ", " p ", " i ", 'p', pogoStack, 'i', ironIngotStack);
+    GameRegistry.addRecipe(new ItemStack(gpogo), "   ", " p ", " g ", 'p', pogoStack, 'g', goldIngotStack);
     
-    MinecraftForge.EVENT_BUS.register(new PogostickEvents()); //PogostickEvents() is your event class
     
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");
     
 
+	}
+	
+	@Init
+	@SideOnly(Side.CLIENT)
+	public void Render(FMLInitializationEvent event){
+		RenderingRegistry.addNewArmourRendererPrefix("armorPOGO");
+		MinecraftForge.EVENT_BUS.register(new PogostickEvents()); //PogostickEvents() is your event class
 	}
 
 }
