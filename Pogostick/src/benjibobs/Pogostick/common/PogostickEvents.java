@@ -192,6 +192,23 @@ public class PogostickEvents {
 				}
 				
 			//iron pogo end
+			//gold pogo start
+				
+				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7248){
+					if(pjumped){
+						ItemStack item = player.inventory.getCurrentItem();
+						if(!(player.isSneaking())){
+							event.setCanceled(true);
+							player.motionY = 0.9;
+							item.setItemDamage(item.getItemDamage() + 1);
+						}else{
+							pjumped = false;
+						}
+					}
+					
+				}
+				
+			//gold pogo end	
 
 		}
 

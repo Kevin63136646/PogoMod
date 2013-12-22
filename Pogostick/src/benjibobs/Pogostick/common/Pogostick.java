@@ -57,6 +57,7 @@ public class Pogostick {
 	public static Item spogo;
 	public static Item ipogo;
 	public static Item gpogo;
+	public static Item dpogo;
 	
 	public static boolean ground;
 	
@@ -110,6 +111,11 @@ public class Pogostick {
     GameRegistry.registerItem(gpogo, "goldpogo");
     LanguageRegistry.addName(gpogo, "Gold Pogostick");
     
+    dpogo = new ItemDiamondPogo(6992);
+    dpogo.setUnlocalizedName("diamondpogo");
+    GameRegistry.registerItem(dpogo, "diamondpogo");
+    LanguageRegistry.addName(dpogo, "Diamond Pogostick");
+    
     tramp = (new BlockTramp(2876, "bouncer"));
     tramp.setUnlocalizedName("bouncer");
     tramp.setHardness(0.7F);
@@ -137,6 +143,7 @@ public class Pogostick {
     ItemStack stoneStack = new ItemStack(Block.stone);
     ItemStack ironIngotStack = new ItemStack(Item.ingotIron);
     ItemStack goldIngotStack = new ItemStack(Item.ingotGold);
+    ItemStack diaStack = new ItemStack(Item.diamond);
 
     GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
@@ -145,7 +152,7 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(spogo), "   ", " p ", " s ", 'p', pogoStack, 's', stoneStack);
     GameRegistry.addRecipe(new ItemStack(ipogo), "   ", " p ", " i ", 'p', pogoStack, 'i', ironIngotStack);
     GameRegistry.addRecipe(new ItemStack(gpogo), "   ", " p ", " g ", 'p', pogoStack, 'g', goldIngotStack);
-    
+    GameRegistry.addRecipe(new ItemStack(dpogo), "   ", " p ", " d ", 'd', diaStack, 'p', pogoStack);
     
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");
