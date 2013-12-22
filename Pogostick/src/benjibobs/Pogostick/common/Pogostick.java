@@ -53,7 +53,6 @@ public class Pogostick {
 	public final Minecraft mc = FMLClientHandler.instance().getClient();
 	
 	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 12, new int[] {1, 1, 1, 1}, 0);
-	 static EnumToolMaterial wtoolWOOD = EnumHelper.addToolMaterial("wtoolPOGO", 0, 59, 0.0F, 0.5F, 0);
 	
 
 	@Instance("Pogostick") //The instance, this is very important later on
@@ -79,7 +78,7 @@ public class Pogostick {
     GameRegistry.registerItem(bpogo, "bpogostick");
     LanguageRegistry.addName(bpogo, "Pogo Base");
     
-    wpogo = new ItemWoodPogo(6989, wtoolWOOD);
+    wpogo = new ItemWoodPogo(6989);
     wpogo.setUnlocalizedName("woodpogo");
     GameRegistry.registerItem(wpogo, "woodpogo");
     LanguageRegistry.addName(wpogo, "Wooden Pogostick");
