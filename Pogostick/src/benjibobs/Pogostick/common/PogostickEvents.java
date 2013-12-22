@@ -20,34 +20,34 @@ public class PogostickEvents {
 	public static boolean pjumped = false;
 	private boolean tc = true;
 
-	@ForgeSubscribe
-	public void cancelFallDmg(LivingHurtEvent event) {
-		
-		if(event.source == DamageSource.fall && event.entity instanceof EntityPlayer){
-			EntityPlayer player = (EntityPlayer)event.entity;
-			
-			if(player.inventory.getCurrentItem() != null){
-			if(player.inventory.getCurrentItem().itemID == 7243){
-				if(pjumped == true){
-				event.setCanceled(true);
-				event.ammount = 0.0F;
-				pjumped = false;
-				tc = false;
-				}
-				if(!(player.isSneaking()) && tc == false){
-					player.motionY = 1;
-					tc = false;
-					event.setCanceled(true);
-				}else{
-					pjumped = false;
-					tc = true;
-				}
-			}
-			}
-			
-		}
-
-	}
+//	@ForgeSubscribe
+//	public void cancelFallDmg(LivingHurtEvent event) {
+//		
+//		if(event.source == DamageSource.fall && event.entity instanceof EntityPlayer){
+//			EntityPlayer player = (EntityPlayer)event.entity;
+//			
+//			if(player.inventory.getCurrentItem() != null){
+//			if(player.inventory.getCurrentItem().itemID == 7243){
+//				if(pjumped == true){
+//				event.setCanceled(true);
+//				event.ammount = 0.0F;
+//				pjumped = false;
+//				tc = false;
+//				}
+//				if(!(player.isSneaking()) && tc == false){
+//					player.motionY = 1;
+//					tc = false;
+//					event.setCanceled(true);
+//				}else{
+//					pjumped = false;
+//					tc = true;
+//				}
+//			}
+//			}
+//			
+//		}
+//
+//	}
 	
 	@ForgeSubscribe
 	public void bouncerLanding(LivingHurtEvent event) {
@@ -79,11 +79,11 @@ public class PogostickEvents {
 		
 		if(event.entity instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer)event.entity;
-			if((player.inventory.getCurrentItem() != null && tc == false) || (mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) == Pogostick.tramp.blockID || mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) == Pogostick.tramp.blockID)){
-				fallam = 0;
-			}else{
-				fallam = event.distance;
-			}
+//			if((player.inventory.getCurrentItem() != null && tc == false) || (mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) == Pogostick.tramp.blockID || mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) == Pogostick.tramp.blockID)){
+//				fallam = 0;
+//			}else{
+//				fallam = event.distance;
+//			}
 			
 			int yc = (int) (player.lastTickPosY - 1);
 			int yc2 = (int) (player.lastTickPosY - 2);

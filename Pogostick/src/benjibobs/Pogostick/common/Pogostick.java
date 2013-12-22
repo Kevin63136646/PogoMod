@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumArmorMaterial;
+import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
@@ -40,18 +41,19 @@ public class Pogostick {
 	
 	public static CreativeTabs tabPogostick = new CreativeTabs("Pogostick") {
         public ItemStack getIconItemStack() {
-                return new ItemStack(pogo, 1, 0);
+                return new ItemStack(bpogo, 1, 0);
         }
 };
 	
 	public static final String modid = "bpogostick";
-	public static Item pogo;
+	public static Item bpogo;
+	public static Item wpogo;
 	public static Block tramp;
 	public static Item pogoboots;
 	public final Minecraft mc = FMLClientHandler.instance().getClient();
 	
 	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 12, new int[] {1, 1, 1, 1}, 0);
-	
+	 static EnumToolMaterial wtoolWOOD = EnumHelper.addToolMaterial("wtoolPOGO", 0, 59, 0.0F, 0.5F, 0);
 	
 
 	@Instance("Pogostick") //The instance, this is very important later on
@@ -72,10 +74,15 @@ public class Pogostick {
 	//MULTIPLAYER ABILITY
 	NetworkRegistry.instance().registerGuiHandler(this, proxy); //Registers the class that deals with GUI data
 	
-	pogo = new ItemPogo(6987);
-	pogo.setUnlocalizedName("pogostick");
-    GameRegistry.registerItem(pogo, "pogostick");
-    LanguageRegistry.addName(pogo, "Pogostick");
+	bpogo = new ItemPogo(6988);
+	bpogo.setUnlocalizedName("bpogostick");
+    GameRegistry.registerItem(bpogo, "bpogostick");
+    LanguageRegistry.addName(bpogo, "Pogo Base");
+    
+    wpogo = new ItemWoodPogo(6989, wtoolWOOD);
+    wpogo.setUnlocalizedName("woodpogo");
+    GameRegistry.registerItem(wpogo, "woodpogo");
+    LanguageRegistry.addName(wpogo, "Wooden Pogostick");
     
     tramp = (new BlockTramp(2876, "bouncer"));
     tramp.setUnlocalizedName("bouncer");
@@ -85,7 +92,7 @@ public class Pogostick {
     LanguageRegistry.addName(tramp, "Bouncer");
     GameRegistry.registerBlock(tramp, "Bouncer");
     
-    pogoboots = new ItemPogoboots(6988, armorPOGO, 5, 3);
+    pogoboots = new ItemPogoboots(6987, armorPOGO, 5, 3);
     pogoboots.setUnlocalizedName("pogoboots");
     LanguageRegistry.addName(pogoboots, "Pogo boots");
     GameRegistry.registerItem(pogoboots, "pogoboots");
@@ -94,15 +101,17 @@ public class Pogostick {
     //Recipes
     
     ItemStack bouncerStack = new ItemStack(tramp);
-    ItemStack pogoStack = new ItemStack(pogo);
+    ItemStack pogoStack = new ItemStack(bpogo);
     ItemStack woolStack = new ItemStack(Block.cloth);
     ItemStack stickStack = new ItemStack(Item.stick);
     ItemStack slimeStack = new ItemStack(Item.slimeBall);
     ItemStack emeraldStack = new ItemStack(Item.emerald);
+    ItemStack woodStack = new ItemStack(Block.planks);
 
-    GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogo);  
-    GameRegistry.addRecipe(new ItemStack(pogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
+    GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
+    GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
     GameRegistry.addRecipe(new ItemStack(pogoboots), "   ", "e e", "s s", 'e',emeraldStack,'s', slimeStack);
+    GameRegistry.addRecipe(new ItemStack(wpogo), " w ", " p ", " w ", 'w', woodStack , 'p', pogoStack);
     
     MinecraftForge.EVENT_BUS.register(new PogostickEvents()); //PogostickEvents() is your event class
     

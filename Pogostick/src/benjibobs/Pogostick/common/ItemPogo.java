@@ -28,25 +28,25 @@ public class ItemPogo extends Item {
 
 	}
 
-	@Override
-	public ItemStack onItemRightClick(ItemStack ItemStack, World World,
-			EntityPlayer EntityPlayer) {
-			
-			if(EntityPlayer.onGround){
-				onground = true;
-			}else{
-				onground = false;
-			}
-			
-			if(onground){
-			EntityPlayer.motionY = 0.8;
-			PogostickEvents.pjumped = true;
-			}
-			
-			
-			
-		
-		return super.onItemRightClick(ItemStack, World, EntityPlayer);
-	}
+//	@Override
+//	public ItemStack onItemRightClick(ItemStack ItemStack, World World,
+//			EntityPlayer EntityPlayer) {
+//			
+//			if(EntityPlayer.onGround){
+//				onground = true;
+//			}else{
+//				onground = false;
+//			}
+//			
+//			if(onground){
+//			EntityPlayer.motionY = 0.8;
+//			PogostickEvents.pjumped = true;
+//			}
+//			
+//			
+//			
+//		
+//		return super.onItemRightClick(ItemStack, World, EntityPlayer);
+//	}
 
 }

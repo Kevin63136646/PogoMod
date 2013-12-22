@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Minecraft"/>
+	<classpathentry kind="lib" path="C:/Users/Ben/AppData/Roaming/.minecraft/libraries/com/google/guava/guava/14.0/guava-14.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
