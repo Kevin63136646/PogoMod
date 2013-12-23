@@ -9,6 +9,7 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.EnumHelper;
@@ -60,6 +61,7 @@ public class Pogostick {
 	public static Item gpogo;
 	public static Item dpogo;
 	public static Item tntpogo;
+	public static Item dmgpogo;
 	
 	public static boolean ground;
 	
@@ -123,6 +125,11 @@ public class Pogostick {
     GameRegistry.registerItem(tntpogo, "tntpogo");
     LanguageRegistry.addName(tntpogo, "Explosive Pogostick");
     
+    dmgpogo = new ItemHarmPogo(6995);
+    dmgpogo.setUnlocalizedName("dmgpogo");
+    GameRegistry.registerItem(dmgpogo, "dmgpogo");
+    LanguageRegistry.addName(dmgpogo, "Pogostick of Harm");
+    
     tramp = (new BlockTramp(2876, "bouncer"));
     tramp.setUnlocalizedName("bouncer");
     tramp.setHardness(0.7F);
@@ -153,6 +160,7 @@ public class Pogostick {
     ItemStack diaStack = new ItemStack(Item.diamond);
     ItemStack tntStack = new ItemStack(Block.tnt);
     ItemStack dpStack = new ItemStack(dpogo);
+    ItemStack potStack = new ItemStack(Item.swordDiamond);
 
     GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
@@ -163,6 +171,7 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(gpogo), "   ", " p ", " g ", 'p', pogoStack, 'g', goldIngotStack);
     GameRegistry.addRecipe(new ItemStack(dpogo), "   ", " p ", " d ", 'd', diaStack, 'p', pogoStack);
     GameRegistry.addRecipe(new ItemStack(tntpogo), "   ", " p ", " t ", 'p', dpStack, 't', tntStack);
+    GameRegistry.addRecipe(new ItemStack(dmgpogo), "   ", " p ", " h ", 'p', pogoStack, 'h', potStack);
     
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");

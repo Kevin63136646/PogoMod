@@ -260,13 +260,14 @@ public class PogostickEvents {
 						if(tntblew == false){
 							ItemStack item = player.inventory.getCurrentItem();
 							event.setCanceled(true);
+							pjumped = false;
 							
 						}else{
 							World expo = FMLClientHandler.instance().getServer().getEntityWorld();
 							EntityPlayerMP playerm = (EntityPlayerMP)event.entity;
 							expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 2.0F, true);
 							ItemStack item = player.inventory.getCurrentItem();
-							item.setItemDamage(item.getItemDamage() + 10);
+							item.setItemDamage(item.getItemDamage() + 9);
 							explosiondmg = true;
 							tntblew = false;
 							player.posY = player.lastTickPosY + 1;	
@@ -275,7 +276,22 @@ public class PogostickEvents {
 						
 					}
 				
-				
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7251){
+					if(pjumped){
+						if(player.isSneaking()){
+						World expo = FMLClientHandler.instance().getServer().getEntityWorld();
+						EntityPlayerMP playerm = (EntityPlayerMP)event.entity;
+						expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 3.0F, false);
+						event.setCanceled(true);
+						explosiondmg = true;
+						ItemStack item = player.inventory.getCurrentItem();
+						item.setItemDamage(item.getItemDamage() + 4);
+						}else{
+							event.setCanceled(true);
+							pjumped = false;
+						}
+					}
+				}
 				
 
 		}
@@ -286,6 +302,8 @@ public class PogostickEvents {
 			event.ammount = 0.0F;
 			explosiondmg = false;
 		}
+		
+		
 
 	}
 	
