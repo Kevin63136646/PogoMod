@@ -13,7 +13,7 @@ public class ItemTNTPogo extends Item {
 	public ItemTNTPogo(int id) {
 		super(id);
 		this.setCreativeTab(Pogostick.tabPogostick);
-		this.setMaxDamage(69);
+		this.setMaxDamage(525);
 		this.maxStackSize = 1;
 		this.canRepair = false;
 	}
