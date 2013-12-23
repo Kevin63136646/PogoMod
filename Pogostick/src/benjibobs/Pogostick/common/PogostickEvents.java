@@ -1,10 +1,15 @@
 package benjibobs.Pogostick.common;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -13,7 +18,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class PogostickEvents {
 
-	Minecraft mc = FMLClientHandler.instance().getClient();
+	MinecraftServer mc = FMLServerHandler.instance().getServer();
+	Minecraft mc1 = FMLClientHandler.instance().getClient();
 
 	public static float fallam;
 	private boolean jumped = false;
@@ -60,12 +66,12 @@ public class PogostickEvents {
 			int yc = (int) (player.lastTickPosY - 1);
 			int yc2 = (int) (player.lastTickPosY - 2);
 
-			if (mc.theWorld.getBlockId((int) player.lastTickPosX, yc,
+			if (mc1.theWorld.getBlockId((int) player.lastTickPosX, yc,
 					(int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 				event.setCanceled(true);
 				event.ammount = 0.0F;
 
-			} else if (mc.theWorld.getBlockId((int) player.lastTickPosX, yc2,
+			} else if (mc1.theWorld.getBlockId((int) player.lastTickPosX, yc2,
 					(int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 				event.setCanceled(true);
 				event.ammount = 0.0F;
@@ -81,8 +87,7 @@ public class PogostickEvents {
 
 		if (event.entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entity;
-			 if(
-			 (mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) == Pogostick.tramp.blockID || mc.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) == Pogostick.tramp.blockID)){
+			 if((mc1.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) == Pogostick.tramp.blockID || mc1.theWorld.getBlockId((int)player.lastTickPosX, (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) == Pogostick.tramp.blockID)){
 			 fallam = 0;
 			 }else{
 			 fallam = event.distance;
@@ -93,11 +98,11 @@ public class PogostickEvents {
 
 			if (event.distance > 0.0F) {
 
-				if (mc.theWorld.getBlockId((int) player.lastTickPosX, yc,
+				if (mc1.theWorld.getBlockId((int) player.lastTickPosX, yc,
 						(int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 					player.motionY = 1.1;
 
-				} else if (mc.theWorld.getBlockId((int) player.lastTickPosX,
+				} else if (mc1.theWorld.getBlockId((int) player.lastTickPosX,
 						yc2, (int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 					player.motionY = 1.1;
 
@@ -115,9 +120,9 @@ public class PogostickEvents {
 		if (event.entity instanceof EntityPlayer) {
 			pjumped = false;
 			EntityPlayer player = (EntityPlayer) event.entity;
-			if (mc.theWorld.getBlockId((int) player.lastTickPosX,
+			if (mc1.theWorld.getBlockId((int) player.lastTickPosX,
 					(int) player.lastTickPosY - 1, (int) player.lastTickPosZ) == Pogostick.tramp.blockID
-					|| mc.theWorld.getBlockId((int) player.lastTickPosX, (int) player.lastTickPosY - 2, (int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
+					|| mc1.theWorld.getBlockId((int) player.lastTickPosX, (int) player.lastTickPosY - 2, (int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 				player.motionY = 1.1;
 			}
 
@@ -156,7 +161,7 @@ public class PogostickEvents {
 	}
 
 	@ForgeSubscribe
-	public void pogoBouncers(LivingHurtEvent event) {
+	public void pogoHandling(LivingHurtEvent event) {
 
 		if (event.entity instanceof EntityPlayer
 				&& event.source == DamageSource.fall) {
@@ -179,7 +184,7 @@ public class PogostickEvents {
 			//stone pogo end
 			//iron pogo start
 				
-				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7247){
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7247){
 					if(pjumped){
 						ItemStack item = player.inventory.getCurrentItem();
 						if(!(player.isSneaking())){
@@ -196,7 +201,7 @@ public class PogostickEvents {
 			//iron pogo end
 			//gold pogo start
 				
-				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7248){
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7248){
 					if(pjumped){
 						ItemStack item = player.inventory.getCurrentItem();
 						if(!(player.isSneaking())){
@@ -213,7 +218,7 @@ public class PogostickEvents {
 			//gold pogo end
 			//diamond pogo start
 				
-				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7249){
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7249){
 					if(pjumped){
 						ItemStack item = player.inventory.getCurrentItem();
 						if(!(player.isSneaking())){
@@ -229,7 +234,18 @@ public class PogostickEvents {
 				
 			//diamond pogo end	
 				
-				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7250){
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7250){
+					if(pjumped){
+						if(player.isSneaking()){
+						tntblew = true;
+						event.setCanceled(true);
+						
+						
+						}
+					}
+					}
+				
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7250){
 					if(pjumped){
 						if(tntblew == false){
 							ItemStack item = player.inventory.getCurrentItem();
@@ -237,18 +253,26 @@ public class PogostickEvents {
 							player.motionY = 1;
 							item.setItemDamage(item.getItemDamage() + 1);
 						}else{
-							mc.theWorld.createExplosion(player, player.lastTickPosX, player.lastTickPosY - 1, player.lastTickPosZ, (float)3, true);
-							event.setCanceled(true);
+							World expo = FMLClientHandler.instance().getServer().getEntityWorld();
+							EntityPlayerMP playerm = (EntityPlayerMP)event.entity;
+							expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 2.0F, true);
 							explosiondmg = true;
-						}
+							tntblew = false;
+							player.posY = player.lastTickPosY + 1;	
+							}
 					}
 						
 					}
+				
+				
+				
 
 		}
 		
+		
+		
 		if(event.entity instanceof EntityPlayer && explosiondmg == true){
-			event.setCanceled(true);
+			event.ammount = 0.0F;
 			explosiondmg = false;
 		}
 
@@ -258,16 +282,7 @@ public class PogostickEvents {
 	public void tntPogo(LivingHurtEvent event){
 		
 		if(event.entity instanceof EntityPlayer){
-			EntityPlayer player = (EntityPlayer)event.entity;
-			if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7250){
-				if(pjumped){
-					if(player.isSneaking()){
-					tntblew = true;
-					event.setCanceled(true);
-					
-					}
-				}
-				}
+			
 				}
 				
 		
