@@ -18,6 +18,8 @@ public class PogostickEvents {
 	public static float fallam;
 	private boolean jumped = false;
 	public static boolean pjumped = false;
+	public static boolean tntblew;
+	public static boolean explosiondmg;
 
 	// @ForgeSubscribe
 	// public void cancelFallDmg(LivingHurtEvent event) {
@@ -208,10 +210,67 @@ public class PogostickEvents {
 					
 				}
 				
-			//gold pogo end	
+			//gold pogo end
+			//diamond pogo start
+				
+				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7249){
+					if(pjumped){
+						ItemStack item = player.inventory.getCurrentItem();
+						if(!(player.isSneaking())){
+							event.setCanceled(true);
+							player.motionY = 1;
+							item.setItemDamage(item.getItemDamage() + 1);
+						}else{
+							pjumped = false;
+						}
+					}
+					
+				}
+				
+			//diamond pogo end	
+				
+				if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7250){
+					if(pjumped){
+						if(tntblew == false){
+							ItemStack item = player.inventory.getCurrentItem();
+							event.setCanceled(true);
+							player.motionY = 1;
+							item.setItemDamage(item.getItemDamage() + 1);
+						}else{
+							mc.theWorld.createExplosion(player, player.lastTickPosX, player.lastTickPosY - 1, player.lastTickPosZ, (float)3, true);
+							event.setCanceled(true);
+							explosiondmg = true;
+						}
+					}
+						
+					}
 
 		}
+		
+		if(event.entity instanceof EntityPlayer && explosiondmg == true){
+			event.setCanceled(true);
+			explosiondmg = false;
+		}
 
+	}
+	
+	@ForgeSubscribe
+	public void tntPogo(LivingHurtEvent event){
+		
+		if(event.entity instanceof EntityPlayer){
+			EntityPlayer player = (EntityPlayer)event.entity;
+			if(player.inventory.getCurrentItem() != null & player.inventory.getCurrentItem().itemID == 7250){
+				if(pjumped){
+					if(player.isSneaking()){
+					tntblew = true;
+					event.setCanceled(true);
+					
+					}
+				}
+				}
+				}
+				
+		
 	}
 
 }

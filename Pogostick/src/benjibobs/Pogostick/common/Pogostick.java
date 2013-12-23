@@ -10,6 +10,7 @@ import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
 import benjibobs.Pogostick.common.handlers.PogostickClientPacketHandler;
@@ -58,6 +59,7 @@ public class Pogostick {
 	public static Item ipogo;
 	public static Item gpogo;
 	public static Item dpogo;
+	public static Item tntpogo;
 	
 	public static boolean ground;
 	
@@ -111,10 +113,15 @@ public class Pogostick {
     GameRegistry.registerItem(gpogo, "goldpogo");
     LanguageRegistry.addName(gpogo, "Gold Pogostick");
     
-    dpogo = new ItemDiamondPogo(6992);
+    dpogo = new ItemDiamondPogo(6993);
     dpogo.setUnlocalizedName("diamondpogo");
     GameRegistry.registerItem(dpogo, "diamondpogo");
     LanguageRegistry.addName(dpogo, "Diamond Pogostick");
+    
+    tntpogo = new ItemTNTPogo(6994);
+    tntpogo.setUnlocalizedName("tntpogo");
+    GameRegistry.registerItem(tntpogo, "tntpogo");
+    LanguageRegistry.addName(tntpogo, "Explosive Pogostick");
     
     tramp = (new BlockTramp(2876, "bouncer"));
     tramp.setUnlocalizedName("bouncer");
@@ -144,6 +151,8 @@ public class Pogostick {
     ItemStack ironIngotStack = new ItemStack(Item.ingotIron);
     ItemStack goldIngotStack = new ItemStack(Item.ingotGold);
     ItemStack diaStack = new ItemStack(Item.diamond);
+    ItemStack tntStack = new ItemStack(Block.tnt);
+    ItemStack dpStack = new ItemStack(dpogo);
 
     GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
@@ -153,6 +162,7 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(ipogo), "   ", " p ", " i ", 'p', pogoStack, 'i', ironIngotStack);
     GameRegistry.addRecipe(new ItemStack(gpogo), "   ", " p ", " g ", 'p', pogoStack, 'g', goldIngotStack);
     GameRegistry.addRecipe(new ItemStack(dpogo), "   ", " p ", " d ", 'd', diaStack, 'p', pogoStack);
+    GameRegistry.addRecipe(new ItemStack(tntpogo), "   ", " p ", " t ", 'p', dpStack, 't', tntStack);
     
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");
