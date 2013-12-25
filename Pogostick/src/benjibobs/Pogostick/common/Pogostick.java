@@ -69,7 +69,7 @@ public class Pogostick {
 	
 	public final MinecraftServer mcs = FMLServerHandler.instance().getServer();
 	
-	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 12, new int[] {1, 1, 1, 1}, 0);
+	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 35, new int[] {1, 1, 1, 1}, 0);
 	
 
 	@Instance("bpogostick") //The instance, this is very important later on

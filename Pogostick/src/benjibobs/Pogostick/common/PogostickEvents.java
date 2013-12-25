@@ -26,6 +26,7 @@ public class PogostickEvents {
 	public static boolean pjumped = false;
 	public static boolean tntblew;
 	public static boolean explosiondmg;
+	private static boolean cancelb;
 
 	// @ForgeSubscribe
 	// public void cancelFallDmg(LivingHurtEvent event) {
@@ -58,34 +59,45 @@ public class PogostickEvents {
 	// }
 
 	@ForgeSubscribe
-	public void bouncerLanding(LivingHurtEvent event) {
+	public void bouncerHealthCancel(LivingHurtEvent event) {
 
 		if (event.source == DamageSource.fall
 				&& event.entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entity;
 			int yc = (int) (player.lastTickPosY - 1);
 			int yc2 = (int) (player.lastTickPosY - 2);
-
+			
+			if(cancelb){
+				cancelb = false;
+				event.setCanceled(true);
+				event.ammount = 0.0F;
+			}
+			
 			if (mc1.theWorld.getBlockId((int) player.lastTickPosX, yc,
 					(int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 				event.setCanceled(true);
 				tntblew = false;
 				event.ammount = 0.0F;
+				cancelb = true;
 
 			} else if (mc1.theWorld.getBlockId((int) player.lastTickPosX, yc2,
 					(int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 				event.setCanceled(true);
 				event.ammount = 0.0F;
 				tntblew = false;
+				cancelb = true;
+
 
 			}
-
+			
+			
+			
 		}
 
 	}
 
 	@ForgeSubscribe
-	public void bounce(LivingFallEvent event) {
+	public void bouncerBounce(LivingFallEvent event) {
 
 		if (event.entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entity;
@@ -119,7 +131,7 @@ public class PogostickEvents {
 	}
 
 	@ForgeSubscribe
-	public void jumpB(LivingJumpEvent event) {
+	public void jumpHandler(LivingJumpEvent event) {
 
 		if (event.entity instanceof EntityPlayer) {
 			pjumped = false;
@@ -129,6 +141,7 @@ public class PogostickEvents {
 					|| mc1.theWorld.getBlockId((int) player.lastTickPosX, (int) player.lastTickPosY - 2, (int) player.lastTickPosZ) == Pogostick.tramp.blockID) {
 				player.motionY = 1.1;
 				tntblew = false;
+				cancelb = true;
 			}
 
 			if (player.inventory.armorItemInSlot(0) != null) {
@@ -145,7 +158,7 @@ public class PogostickEvents {
 	}
 
 	@ForgeSubscribe
-	public void boots(LivingHurtEvent event) {
+	public void bootsHandler(LivingHurtEvent event) {
 
 		if (event.source == DamageSource.fall && event.entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entity;
@@ -172,6 +185,19 @@ public class PogostickEvents {
 		if (event.entity instanceof EntityPlayer
 				&& event.source == DamageSource.fall) {
 			EntityPlayer player = (EntityPlayer) event.entity;
+			//wood pogo start
+			
+			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7245){
+				if(pjumped){
+					
+					pjumped = false;
+					event.setCanceled(true);
+				
+				}
+			}
+		
+		//wood pogo end
+			
 			//stone pogo start
 			
 				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7246){
