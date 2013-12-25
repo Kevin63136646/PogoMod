@@ -3,7 +3,7 @@
   "modid": "bpogostick",
   "name" : "Pogostick",
   "description" : "The bukkit plugin becomes a mod!",
-  "version": "1.1",
+  "version": "1.2",
   "url": "http://dev.bukkit.org/bukkit-plugins/pogo/",
   "updateUrl": "",
   "authorList": [
