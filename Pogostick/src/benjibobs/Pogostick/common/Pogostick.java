@@ -172,6 +172,14 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(dpogo), "   ", " p ", " d ", 'd', diaStack, 'p', pogoStack);
     GameRegistry.addRecipe(new ItemStack(tntpogo), "   ", " p ", " t ", 'p', dpStack, 't', tntStack);
     GameRegistry.addRecipe(new ItemStack(dmgpogo), "   ", " p ", " h ", 'p', pogoStack, 'h', potStack);
+    GameRegistry.addRecipe(new ItemStack(pogoboots), "e e", "s s", "   ", 'e',emeraldStack,'s', slimeStack);
+    GameRegistry.addRecipe(new ItemStack(wpogo), " p ", " w ", "   ", 'w', woodStack , 'p', pogoStack);
+    GameRegistry.addRecipe(new ItemStack(spogo), " p ", " s ", "   ", 'p', pogoStack, 's', stoneStack);
+    GameRegistry.addRecipe(new ItemStack(ipogo), " p ", " i ", "   ", 'p', pogoStack, 'i', ironIngotStack);
+    GameRegistry.addRecipe(new ItemStack(gpogo), " p ", " g ", "   ", 'p', pogoStack, 'g', goldIngotStack);
+    GameRegistry.addRecipe(new ItemStack(dpogo), " p ", " d ", "   ", 'd', diaStack, 'p', pogoStack);
+    GameRegistry.addRecipe(new ItemStack(tntpogo), " p ", " t ", "   ", 'p', dpStack, 't', tntStack);
+    GameRegistry.addRecipe(new ItemStack(dmgpogo), " p ", " h ", "   ", 'p', pogoStack, 'h', potStack);
     
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");
