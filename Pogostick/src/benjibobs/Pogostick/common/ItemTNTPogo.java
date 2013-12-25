@@ -35,7 +35,7 @@ public class ItemTNTPogo extends Item {
 				item.setItemDamage(item.getItemDamage() + 1);
 			}else{
 				Pogostick.ground = false;
-				PogostickEvents.pjumped = false;
+				
 			}
 			
 			

@@ -1,5 +1,7 @@
 package benjibobs.Pogostick.common;
 
+import java.util.List;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.client.Minecraft;
@@ -333,6 +335,47 @@ public class PogostickEvents {
 
 	}
 	
-	
+	@ForgeSubscribe
+	public void mobKnockback(LivingHurtEvent event){
+		
+		if(event.entity instanceof EntityPlayer && event.source == DamageSource.fall){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			World world = FMLClientHandler.instance().getServer().getEntityWorld();
+			
+			ItemStack kpogo = new ItemStack(Pogostick.kpogo);
+			if(player.inventory.getCurrentItem().itemID == 7252){
+				if(pjumped){
+				if(player.isSneaking()){
+					event.setCanceled(true);
+					event.ammount = 0.0F;
+					knockMobs(4.0D, world, player);
+					ItemStack item = player.inventory.getCurrentItem();
+					item.setItemDamage(item.getItemDamage() + 1);
+				}else{
+					event.setCanceled(true);
+					event.ammount = 0.0F;
+				}
+			}
+			}
+		}
+		
+	}
 
+	public void knockMobs(double area, World world, EntityPlayer player){
+		
+		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(area, area, area));
+		
+		for(Entity mob:entities){
+			
+			if(mob != null){
+				mob.motionX = 0.8;
+				mob.motionY = 0.6;
+				mob.motionZ = 0.8;
+			}
+			
+		}
+		
+	}
+	
 }

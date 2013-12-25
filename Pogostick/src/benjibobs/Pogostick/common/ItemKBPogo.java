@@ -2,31 +2,26 @@ package benjibobs.Pogostick.common;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemWoodPogo extends Item {
+public class ItemKBPogo extends Item {
 
-	public ItemWoodPogo(int id) {
+	public ItemKBPogo(int id) {
 		super(id);
+		this.setCreativeTab(Pogostick.tabPogostick);
+		this.setMaxDamage(232);
 		this.maxStackSize = 1;
-        this.setMaxDamage(59);
-        this.setCreativeTab(Pogostick.tabPogostick);
-        this.canRepair = false;
+		this.canRepair = false;
 	}
 	
-	
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "woodpogo");
+		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "kpogo");
 
 	}
 	
@@ -35,7 +30,7 @@ public class ItemWoodPogo extends Item {
 			ItemStack item = EntityPlayer.getHeldItem();
 			if(EntityPlayer.onGround){
 				Pogostick.ground = true;
-				EntityPlayer.motionY = 0.6;
+				EntityPlayer.motionY = 0.9;
 				PogostickEvents.pjumped = true;
 				item.setItemDamage(item.getItemDamage() + 1);
 			}else{
@@ -48,5 +43,5 @@ public class ItemWoodPogo extends Item {
 		
 		return super.onItemRightClick(ItemStack, World, EntityPlayer);
 	}
-	
+
 }
