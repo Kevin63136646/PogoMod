@@ -29,10 +29,21 @@ public class ItemDiamondPogo extends Item {
 	public ItemStack onItemRightClick(ItemStack ItemStack, World World, EntityPlayer EntityPlayer) {
 			ItemStack item = EntityPlayer.getHeldItem();
 			if(EntityPlayer.onGround){
+				EntityPlayer.addChatMessage("initial shit checked");
 				Pogostick.ground = true;
 				EntityPlayer.motionY = 1;
 				PogostickEvents.pjumped = true;
-				item.setItemDamage(item.getItemDamage() + 1);
+				EntityPlayer.addChatMessage("pjumped = true");
+				int dur = item.getItemDamage() + 1;
+				int durc = item.getMaxDamage() - item.getItemDamage();
+				if(dur < item.getMaxDamage() && durc > 0){
+					item.setItemDamage(dur);
+					
+				}else{
+					item.setItemDamage(item.getMaxDamage());
+					EntityPlayer.inventory.clearInventory(this.itemID, item.getMaxDamage());
+					
+				}
 			}else{
 				Pogostick.ground = false;
 				

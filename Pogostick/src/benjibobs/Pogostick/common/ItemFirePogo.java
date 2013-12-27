@@ -8,20 +8,20 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemHarmPogo extends Item {
+public class ItemFirePogo extends Item {
 
-	public ItemHarmPogo(int id) {
+	public ItemFirePogo(int id) {
 		super(id);
 		this.setCreativeTab(Pogostick.tabPogostick);
-		this.setMaxDamage(1561);
-		this.maxStackSize = 1;
 		this.canRepair = false;
+		this.maxStackSize = 1;
+		this.setMaxDamage(234);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "dmgpogo");
+		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "firepogo");
 
 	}
 	
@@ -29,8 +29,9 @@ public class ItemHarmPogo extends Item {
 	public ItemStack onItemRightClick(ItemStack ItemStack, World World, EntityPlayer EntityPlayer) {
 			ItemStack item = EntityPlayer.getHeldItem();
 			if(EntityPlayer.onGround){
+				
 				Pogostick.ground = true;
-				EntityPlayer.motionY = 0.9;
+				EntityPlayer.motionY = 0.8;
 				PogostickEvents.pjumped = true;
 				int dur = item.getItemDamage() + 1;
 				int durc = item.getMaxDamage() - item.getItemDamage();
@@ -39,9 +40,10 @@ public class ItemHarmPogo extends Item {
 					
 				}else{
 					item.setItemDamage(item.getMaxDamage());
-					EntityPlayer.inventory.clearInventory(this.itemID, item.getMaxDamage());
+					EntityPlayer.inventory.clearInventory(7253, item.getMaxDamage());
 					
 				}
+				
 			}else{
 				Pogostick.ground = false;
 				

@@ -26,6 +26,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
@@ -40,14 +41,14 @@ clientPacketHandlerSpec = @SidedPacketHandler(channels = {"Pogostick"}, packetHa
 serverPacketHandlerSpec = @SidedPacketHandler(channels = {"Pogostick"}, packetHandler = PogostickServerPacketHandler.class)) //For serverside packet handling
 
 //MOD BASICS
-@Mod(modid=Pogostick.modid,name="Pogostick",version="Beta")
+@Mod(modid=Pogostick.modid,name="Pogostick",version="Public Release")
 
 
 public class Pogostick {
 	
 	public static CreativeTabs tabPogostick = new CreativeTabs("Pogostick") {
         public ItemStack getIconItemStack() {
-                return new ItemStack(bpogo, 1, 0);
+                return new ItemStack(fpogo, 1, 0);
         }
 };
 	
@@ -63,6 +64,7 @@ public class Pogostick {
 	public static Item tntpogo;
 	public static Item dmgpogo;
 	public static Item kpogo;
+	public static Item fpogo;
 	
 	public static boolean ground;
 	
@@ -136,6 +138,11 @@ public class Pogostick {
     GameRegistry.registerItem(kpogo, "kpogo");
     LanguageRegistry.addName(kpogo, "Pogostick of Knockback");
     
+    fpogo = new ItemFirePogo(6997);
+    fpogo.setUnlocalizedName("firepogo");
+    GameRegistry.registerItem(fpogo, "firepogo");
+    LanguageRegistry.addName(fpogo, "Flaming Pogostick");
+    
     tramp = (new BlockTramp(2876, "bouncer"));
     tramp.setUnlocalizedName("bouncer");
     tramp.setHardness(0.7F);
@@ -148,7 +155,6 @@ public class Pogostick {
     pogoboots.setUnlocalizedName("pogoboots");
     LanguageRegistry.addName(pogoboots, "Pogo-boots");
     GameRegistry.registerItem(pogoboots, "pogoboots");
-    
     
     
     //Recipes
@@ -168,6 +174,7 @@ public class Pogostick {
     ItemStack dpStack = new ItemStack(dpogo);
     ItemStack potStack = new ItemStack(Item.swordDiamond);
     ItemStack silkStack = new ItemStack(Item.silk);
+    ItemStack blazeStack = new ItemStack(Item.blazePowder);
 
     GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
@@ -189,6 +196,8 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(dmgpogo), " p ", " h ", "   ", 'p', pogoStack, 'h', potStack);
     GameRegistry.addRecipe(new ItemStack(kpogo), "   ", " p ", " k ", 'p', pogoStack, 'k', bouncerStack);
     GameRegistry.addRecipe(new ItemStack(kpogo), " p ", " k ", "   ", 'p', pogoStack, 'k', bouncerStack);
+    GameRegistry.addRecipe(new ItemStack(fpogo), "   ", " p ", " b ", 'p', pogoStack, 'b', blazeStack);
+    GameRegistry.addRecipe(new ItemStack(fpogo), " p ", " b ", "   ", 'p', pogoStack, 'b', blazeStack);
     
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");

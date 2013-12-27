@@ -32,7 +32,16 @@ public class ItemIronPogo extends Item {
 				Pogostick.ground = true;
 				EntityPlayer.motionY = 0.9;
 				PogostickEvents.pjumped = true;
-				item.setItemDamage(item.getItemDamage() + 1);
+				int dur = item.getItemDamage() + 1;
+				int durc = item.getMaxDamage() - item.getItemDamage();
+				if(dur < item.getMaxDamage() && durc > 0){
+					item.setItemDamage(dur);
+					
+				}else{
+					item.setItemDamage(item.getMaxDamage());
+					EntityPlayer.inventory.clearInventory(this.itemID, item.getMaxDamage());
+					
+				}
 			}else{
 				Pogostick.ground = false;
 				
