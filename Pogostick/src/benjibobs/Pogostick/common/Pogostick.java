@@ -54,6 +54,8 @@ public class Pogostick {
 	
 	public static final String modid = "bpogostick";
 	
+	public static boolean newyear = true;
+	
 	public static Item bpogo;
 	public static Item wpogo;
 	public static Item pogoboots;
@@ -175,6 +177,7 @@ public class Pogostick {
     ItemStack potStack = new ItemStack(Item.swordDiamond);
     ItemStack silkStack = new ItemStack(Item.silk);
     ItemStack blazeStack = new ItemStack(Item.blazePowder);
+    ItemStack fireworkStack = new ItemStack(Item.firework);
 
     GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
@@ -198,7 +201,7 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(kpogo), " p ", " k ", "   ", 'p', pogoStack, 'k', bouncerStack);
     GameRegistry.addRecipe(new ItemStack(fpogo), "   ", " p ", " b ", 'p', pogoStack, 'b', blazeStack);
     GameRegistry.addRecipe(new ItemStack(fpogo), " p ", " b ", "   ", 'p', pogoStack, 'b', blazeStack);
-    
+
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
     LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");
     

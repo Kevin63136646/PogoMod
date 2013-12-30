@@ -17,7 +17,6 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class PogostickEvents {
 
@@ -25,43 +24,12 @@ public class PogostickEvents {
 	Minecraft mc1 = FMLClientHandler.instance().getClient();
 
 	public static float fallam;
-	private boolean jumped = false;
 	public static boolean pjumped = false;
 	public static boolean tntblew;
 	public static boolean explosiondmg;
 	private static boolean cancelb;
-
-	// TODO: Check if comment still needed, if not remove, if so add notes.
-	//
-	// @ForgeSubscribe
-	// public void cancelFallDmg(LivingHurtEvent event) {
-	//
-	// if(event.source == DamageSource.fall && event.entity instanceof
-	// EntityPlayer){
-	// EntityPlayer player = (EntityPlayer)event.entity;
-	//
-	// if(player.inventory.getCurrentItem() != null){
-	// if(player.inventory.getCurrentItem().itemID == 7243){
-	// if(pjumped == true){
-	// event.setCanceled(true);
-	// event.ammount = 0.0F;
-	// pjumped = false;
-	// tc = false;
-	// }
-	// if(!(player.isSneaking()) && tc == false){
-	// player.motionY = 1;
-	// tc = false;
-	// event.setCanceled(true);
-	// }else{
-	// pjumped = false;
-	// tc = true;
-	// }
-	// }
-	// }
-	//
-	// }
-	//
-	// }
+	@SuppressWarnings("unused")
+	private static boolean jumped = false;
 
 	@ForgeSubscribe
 	public void bouncerHealthCancel(LivingHurtEvent event) {
@@ -150,7 +118,7 @@ public class PogostickEvents {
 			}
 
 			if (player.inventory.armorItemInSlot(0) != null) {
-				ItemStack pogoboots = new ItemStack(Pogostick.pogoboots);
+				
 				if (player.inventory.armorItemInSlot(0).itemID == 7243) {
 					player.motionY = 0.7;
 					jumped = true;
@@ -169,7 +137,7 @@ public class PogostickEvents {
 			EntityPlayer player = (EntityPlayer) event.entity;
 			if (player.inventory.armorItemInSlot(0) != null) {
 
-				ItemStack pogoboots = new ItemStack(Pogostick.pogoboots);
+				
 				if (player.inventory.armorItemInSlot(0).itemID == 7243) {
 
 					ItemStack pb = player.inventory.armorItemInSlot(0);
@@ -340,7 +308,7 @@ public class PogostickEvents {
 				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7250){
 					if(pjumped){
 						if(tntblew == false){
-							ItemStack item = player.inventory.getCurrentItem();
+							
 							event.setCanceled(true);
 							pjumped = false;
 							
@@ -418,7 +386,7 @@ public class PogostickEvents {
 			EntityPlayer player = (EntityPlayer)event.entity;
 			World world = FMLClientHandler.instance().getServer().getEntityWorld();
 			
-			ItemStack kpogo = new ItemStack(Pogostick.kpogo);
+			
 			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().itemID == 7252 ){
 				if(pjumped){
 					
@@ -487,9 +455,16 @@ public class PogostickEvents {
 		}
 		
 	}
-
+	
+	
+			
+		
+		
+	
+	
 	public void knockMobs(double area, World world, EntityPlayer player){
 		
+		@SuppressWarnings("unchecked")
 		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(area, area, area));
 		
 		for(Entity mob:entities){
@@ -508,6 +483,7 @@ public class PogostickEvents {
 	
 	public void burnMobs(double area, World world, EntityPlayer player){
 		
+		@SuppressWarnings("unchecked")
 		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(area, area, area));
 		
 		for(Entity mob:entities){

@@ -29,11 +29,9 @@ public class ItemDiamondPogo extends Item {
 	public ItemStack onItemRightClick(ItemStack ItemStack, World World, EntityPlayer EntityPlayer) {
 			ItemStack item = EntityPlayer.getHeldItem();
 			if(EntityPlayer.onGround){
-				EntityPlayer.addChatMessage("initial shit checked");
 				Pogostick.ground = true;
 				EntityPlayer.motionY = 1;
 				PogostickEvents.pjumped = true;
-				EntityPlayer.addChatMessage("pjumped = true");
 				int dur = item.getItemDamage() + 1;
 				int durc = item.getMaxDamage() - item.getItemDamage();
 				if(dur < item.getMaxDamage() && durc > 0){
@@ -54,5 +52,11 @@ public class ItemDiamondPogo extends Item {
 		
 		return super.onItemRightClick(ItemStack, World, EntityPlayer);
 	}
+
+	@Override
+    public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
+    {
+        return Item.diamond.itemID == par2ItemStack.itemID ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+    }
 
 }
