@@ -71,6 +71,7 @@ public class Pogostick {
 	public static boolean ground;
 	
 	public static Block tramp;
+	public static Block mantramp;
 	
 	public final MinecraftServer mcs = FMLServerHandler.instance().getServer();
 	
@@ -145,13 +146,21 @@ public class Pogostick {
     GameRegistry.registerItem(fpogo, "firepogo");
     LanguageRegistry.addName(fpogo, "Flaming Pogostick");
     
-    tramp = (new BlockTramp(2876, "bouncer"));
-    tramp.setUnlocalizedName("bouncer");
+    tramp = new BlockTramp(2876, "semibouncer");
+    tramp.setUnlocalizedName("semibouncer");
     tramp.setHardness(0.7F);
-    tramp.setStepSound(Block.soundMetalFootstep);
+    tramp.setStepSound(Block.soundClothFootstep);
     tramp.setResistance(0.7F);
-    LanguageRegistry.addName(tramp, "Bouncer");
-    GameRegistry.registerBlock(tramp, "Bouncer");
+    LanguageRegistry.addName(tramp, "Semi-auto Bouncer");
+    GameRegistry.registerBlock(tramp, "Semi-auto Bouncer");
+    
+    mantramp = new BlockManTramp(2877, "manbouncer");
+    mantramp.setUnlocalizedName("manbouncer");
+    mantramp.setHardness(0.7F);
+    mantramp.setStepSound(Block.soundClothFootstep);
+    mantramp.setResistance(0.7F);
+    LanguageRegistry.addName(mantramp, "Manual Bouncer");
+    GameRegistry.registerBlock(mantramp, "Manual Bouncer");
     
     pogoboots = new ItemPogoboots(6987, armorPOGO, 5, 3);
     pogoboots.setUnlocalizedName("pogoboots");
@@ -179,7 +188,7 @@ public class Pogostick {
     ItemStack blazeStack = new ItemStack(Item.blazePowder);
     ItemStack fireworkStack = new ItemStack(Item.firework);
 
-    GameRegistry.addRecipe(new ItemStack(tramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
+    GameRegistry.addRecipe(new ItemStack(mantramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
     GameRegistry.addRecipe(new ItemStack(pogoboots), "   ", "e e", "s s", 'e',emeraldStack,'s', slimeStack);
     GameRegistry.addRecipe(new ItemStack(wpogo), "   ", " p ", " w ", 'w', woodStack , 'p', pogoStack);
@@ -212,7 +221,8 @@ public class Pogostick {
 	@SideOnly(Side.CLIENT)
 	public void Render(FMLInitializationEvent event){
 		RenderingRegistry.addNewArmourRendererPrefix("armorPOGO");
-		MinecraftForge.EVENT_BUS.register(new PogostickEvents()); //PogostickEvents() is your event class
+		MinecraftForge.EVENT_BUS.register(new ManualBouncerEvents());
+		MinecraftForge.EVENT_BUS.register(new PogostickEvents());//PogostickEvents() is your event class
 	}
 
 }

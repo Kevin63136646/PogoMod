@@ -5,16 +5,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.Icon;
 
-public class BlockTramp extends Block {
-	
-	public BlockTramp(int id, String texture) {
+public class BlockManTramp extends Block {
+
+	public BlockManTramp(int id, String texture) {
 		super(id, Material.cloth);
 		this.setCreativeTab(Pogostick.tabPogostick);
-		
-		
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -27,9 +24,9 @@ public class BlockTramp extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister icon) {
-	topIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_top");
-	bottomIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_bottom");
-	sideIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_side");
+	topIcon = icon.registerIcon(Pogostick.modid + ":" + "manbouncer_top");
+	bottomIcon = icon.registerIcon(Pogostick.modid + ":" + "manbouncer_bottom");
+	sideIcon = icon.registerIcon(Pogostick.modid + ":" + "manbouncer_side");
 	}
 	
 	@Override
@@ -43,4 +40,5 @@ public class BlockTramp extends Block {
 	return sideIcon;
 	}
 	}
+
 }
