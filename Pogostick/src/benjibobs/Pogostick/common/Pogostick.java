@@ -1,44 +1,26 @@
 package benjibobs.Pogostick.common;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.StepSound;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
-import benjibobs.Pogostick.common.handlers.PogostickClientPacketHandler;
-import benjibobs.Pogostick.common.handlers.PogostickServerPacketHandler;
-import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraftforge.common.util.EnumHelper;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.server.FMLServerHandler;
-import net.minecraftforge.common.Configuration;
-
-@NetworkMod(clientSideRequired=true,serverSideRequired=true, //Whether client side and server side are needed
-clientPacketHandlerSpec = @SidedPacketHandler(channels = {"Pogostick"}, packetHandler = PogostickClientPacketHandler.class), //For clientside packet handling
-serverPacketHandlerSpec = @SidedPacketHandler(channels = {"Pogostick"}, packetHandler = PogostickServerPacketHandler.class)) //For serverside packet handling
 
 //MOD BASICS
 @Mod(modid=Pogostick.modid,name="Pogostick",version="Public Release")
@@ -47,9 +29,14 @@ serverPacketHandlerSpec = @SidedPacketHandler(channels = {"Pogostick"}, packetHa
 public class Pogostick {
 	
 	public static CreativeTabs tabPogostick = new CreativeTabs("Pogostick") {
-        public ItemStack getIconItemStack() {
-                return new ItemStack(fpogo, 1, 0);
-        }
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		public Item getTabIconItem() {
+			
+			return fpogo;
+		}
+       
 };
 	
 	public static final String modid = "bpogostick";
@@ -75,7 +62,7 @@ public class Pogostick {
 	
 	public final MinecraftServer mcs = FMLServerHandler.instance().getServer();
 	
-	 static EnumArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 35, new int[] {1, 1, 1, 1}, 0);
+	static ArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 35, new int[] {1, 1, 1, 1}, 0);
 	
 
 	@Instance("bpogostick") //The instance, this is very important later on
@@ -84,109 +71,103 @@ public class Pogostick {
 	@SidedProxy(clientSide = "benjibobs.Pogostick.client.PogostickClientProxy", serverSide = "benjibobs.Pogostick.common.PogostickCommonProxy") //Tells Forge the location of your proxies
 	public static PogostickCommonProxy proxy;
 
-	@PreInit
-	public void PreInit(FMLPreInitializationEvent e){	
-		
-		
-	}
-
-	@Init
+	@EventHandler
 	public void InitPogostick(FMLInitializationEvent event){ //Your main initialization method
 
 	//MULTIPLAYER ABILITY
-	NetworkRegistry.instance().registerGuiHandler(this, proxy); //Registers the class that deals with GUI data
+	NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy); //Registers the class that deals with GUI data
 	
-	bpogo = new ItemPogo(6988);
+	bpogo = new ItemPogo();
 	bpogo.setUnlocalizedName("bpogostick");
-    GameRegistry.registerItem(bpogo, "bpogostick");
-    LanguageRegistry.addName(bpogo, "Pogostick Template");
+    GameRegistry.registerItem(bpogo, "pogo_bpogostick");
+    //LanguageRegistry.addName(bpogo, "Pogostick Template");
     
-    wpogo = new ItemWoodPogo(6989);
+    wpogo = new ItemWoodPogo();
     wpogo.setUnlocalizedName("woodpogo");
-    GameRegistry.registerItem(wpogo, "woodpogo");
-    LanguageRegistry.addName(wpogo, "Wooden Pogostick");
+    GameRegistry.registerItem(wpogo, "pogo_woodpogo");
+    //LanguageRegistry.addName(wpogo, "Wooden Pogostick");
     
-    spogo = new ItemStonePogo(6990);
+    spogo = new ItemStonePogo();
     spogo.setUnlocalizedName("stonepogo");
-    GameRegistry.registerItem(spogo, "stonepogo");
-    LanguageRegistry.addName(spogo, "Stone Pogostick");
+    GameRegistry.registerItem(spogo, "pogo_stonepogo");
+    //LanguageRegistry.addName(spogo, "Stone Pogostick");
     
-    ipogo = new ItemIronPogo(6991);
+    ipogo = new ItemIronPogo();
     ipogo.setUnlocalizedName("ironpogo");
-    GameRegistry.registerItem(ipogo, "ironpogo");
-    LanguageRegistry.addName(ipogo, "Iron Pogostick");
+    GameRegistry.registerItem(ipogo, "pogo_ironpogo");
+    //LanguageRegistry.addName(ipogo, "Iron Pogostick");
     
-    gpogo = new ItemGoldPogo(6992);
+    gpogo = new ItemGoldPogo();
     gpogo.setUnlocalizedName("goldpogo");
-    GameRegistry.registerItem(gpogo, "goldpogo");
-    LanguageRegistry.addName(gpogo, "Gold Pogostick");
+    GameRegistry.registerItem(gpogo, "pogo_goldpogo");
+    //LanguageRegistry.addName(gpogo, "Gold Pogostick");
     
-    dpogo = new ItemDiamondPogo(6993);
+    dpogo = new ItemDiamondPogo();
     dpogo.setUnlocalizedName("diamondpogo");
-    GameRegistry.registerItem(dpogo, "diamondpogo");
-    LanguageRegistry.addName(dpogo, "Diamond Pogostick");
+    GameRegistry.registerItem(dpogo, "pogo_diamondpogo");
+    //LanguageRegistry.addName(dpogo, "Diamond Pogostick");
     
-    tntpogo = new ItemTNTPogo(6994);
+    tntpogo = new ItemTNTPogo();
     tntpogo.setUnlocalizedName("tntpogo");
-    GameRegistry.registerItem(tntpogo, "tntpogo");
-    LanguageRegistry.addName(tntpogo, "Explosive Pogostick");
+    GameRegistry.registerItem(tntpogo, "pogo_tntpogo");
+    //LanguageRegistry.addName(tntpogo, "Explosive Pogostick");
     
-    dmgpogo = new ItemHarmPogo(6995);
+    dmgpogo = new ItemHarmPogo();
     dmgpogo.setUnlocalizedName("dmgpogo");
-    GameRegistry.registerItem(dmgpogo, "dmgpogo");
-    LanguageRegistry.addName(dmgpogo, "Pogostick of Harm");
+    GameRegistry.registerItem(dmgpogo, "pogo_dmgpogo");
+    //LanguageRegistry.addName(dmgpogo, "Pogostick of Harm");
     
-    kpogo = new ItemKBPogo(6996);
+    kpogo = new ItemKBPogo();
     kpogo.setUnlocalizedName("kpogo");
-    GameRegistry.registerItem(kpogo, "kpogo");
-    LanguageRegistry.addName(kpogo, "Pogostick of Knockback");
+    GameRegistry.registerItem(kpogo, "pogo_kpogo");
+    //LanguageRegistry.addName(kpogo, "Pogostick of Knockback");
     
-    fpogo = new ItemFirePogo(6997);
+    fpogo = new ItemFirePogo();
     fpogo.setUnlocalizedName("firepogo");
-    GameRegistry.registerItem(fpogo, "firepogo");
-    LanguageRegistry.addName(fpogo, "Flaming Pogostick");
+    GameRegistry.registerItem(fpogo, "pogo_firepogo");
+    //LanguageRegistry.addName(fpogo, "Flaming Pogostick");
     
-    tramp = new BlockTramp(2876, "semibouncer");
-    tramp.setUnlocalizedName("semibouncer");
+    tramp = new BlockTramp("semibouncer");
+    tramp.setBlockName("semibouncer");
     tramp.setHardness(0.7F);
-    tramp.setStepSound(Block.soundClothFootstep);
+    tramp.setStepSound(Block.soundTypeCloth);
     tramp.setResistance(0.7F);
-    LanguageRegistry.addName(tramp, "Semi-auto Bouncer");
-    GameRegistry.registerBlock(tramp, "Semi-auto Bouncer");
+    //LanguageRegistry.addName(tramp, "Semi-auto Bouncer");
+    GameRegistry.registerBlock(tramp, "pogo_Semi-auto Bouncer");
     
-    mantramp = new BlockManTramp(2877, "manbouncer");
-    mantramp.setUnlocalizedName("manbouncer");
+    mantramp = new BlockManTramp( "manbouncer");
+    mantramp.setBlockName("manbouncer");
     mantramp.setHardness(0.7F);
-    mantramp.setStepSound(Block.soundClothFootstep);
+    mantramp.setStepSound(Block.soundTypeCloth);
     mantramp.setResistance(0.7F);
-    LanguageRegistry.addName(mantramp, "Manual Bouncer");
-    GameRegistry.registerBlock(mantramp, "Manual Bouncer");
+    //LanguageRegistry.addName(mantramp, "Manual Bouncer");
+    GameRegistry.registerBlock(mantramp, "pogo_Manual Bouncer");
     
-    pogoboots = new ItemPogoboots(6987, armorPOGO, 5, 3);
+    pogoboots = new ItemPogoboots(armorPOGO, 5, 3);
     pogoboots.setUnlocalizedName("pogoboots");
-    LanguageRegistry.addName(pogoboots, "Pogo-boots");
-    GameRegistry.registerItem(pogoboots, "pogoboots");
+    //LanguageRegistry.addName(pogoboots, "Pogo-boots");
+    GameRegistry.registerItem(pogoboots, "pogo_pogoboots");
     
     
     //Recipes
     
     ItemStack bouncerStack = new ItemStack(tramp);
     ItemStack pogoStack = new ItemStack(bpogo);
-    ItemStack woolStack = new ItemStack(Block.cloth);
-    ItemStack stickStack = new ItemStack(Item.stick);
-    ItemStack slimeStack = new ItemStack(Item.slimeBall);
-    ItemStack emeraldStack = new ItemStack(Item.emerald);
-    ItemStack woodStack = new ItemStack(Block.planks);
-    ItemStack stoneStack = new ItemStack(Block.cobblestone);
-    ItemStack ironIngotStack = new ItemStack(Item.ingotIron);
-    ItemStack goldIngotStack = new ItemStack(Item.ingotGold);
-    ItemStack diaStack = new ItemStack(Item.diamond);
-    ItemStack tntStack = new ItemStack(Block.tnt);
+    ItemStack woolStack = new ItemStack(Blocks.wool);
+    ItemStack stickStack = new ItemStack(Items.stick);
+    ItemStack slimeStack = new ItemStack(Items.slime_ball);
+    ItemStack emeraldStack = new ItemStack(Items.emerald);
+    ItemStack woodStack = new ItemStack(Blocks.planks);
+    ItemStack stoneStack = new ItemStack(Blocks.cobblestone);
+    ItemStack ironIngotStack = new ItemStack(Items.iron_ingot);
+    ItemStack goldIngotStack = new ItemStack(Items.gold_ingot);
+    ItemStack diaStack = new ItemStack(Items.diamond);
+    ItemStack tntStack = new ItemStack(Blocks.tnt);
     ItemStack dpStack = new ItemStack(dpogo);
-    ItemStack potStack = new ItemStack(Item.swordDiamond);
-    ItemStack silkStack = new ItemStack(Item.silk);
-    ItemStack blazeStack = new ItemStack(Item.blazePowder);
-    ItemStack fireworkStack = new ItemStack(Item.firework);
+    ItemStack potStack = new ItemStack(Items.diamond_sword);
+    ItemStack silkStack = new ItemStack(Items.string);
+    ItemStack blazeStack = new ItemStack(Items.blaze_powder);
+    ItemStack fireworkStack = new ItemStack(Items.fireworks);
 
     GameRegistry.addRecipe(new ItemStack(mantramp), "xxx", "xyx", "xxx", 'x', woolStack, 'y', pogoStack);  
     GameRegistry.addRecipe(new ItemStack(bpogo), " x ", " x ", " s ", 'x', stickStack, 's', slimeStack);
@@ -211,13 +192,13 @@ public class Pogostick {
     GameRegistry.addRecipe(new ItemStack(fpogo), "   ", " p ", " b ", 'p', pogoStack, 'b', blazeStack);
     GameRegistry.addRecipe(new ItemStack(fpogo), " p ", " b ", "   ", 'p', pogoStack, 'b', blazeStack);
 
-    LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_US", "Pogostick");
-    LanguageRegistry.instance().addStringLocalization("itemGroup.Pogostick", "en_UK", "Pogostick");
+    //LanguageRegistry.instance().addStringLocalization("ItemsGroup.Pogostick", "en_US", "Pogostick");
+    //LanguageRegistry.instance().addStringLocalization("ItemsGroup.Pogostick", "en_UK", "Pogostick");
     
 
 	}
 	
-	@Init
+	@EventHandler
 	@SideOnly(Side.CLIENT)
 	public void Render(FMLInitializationEvent event){
 		RenderingRegistry.addNewArmourRendererPrefix("armorPOGO");

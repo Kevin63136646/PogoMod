@@ -2,7 +2,7 @@ package benjibobs.Pogostick.common;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,8 +10,7 @@ import net.minecraft.world.World;
 
 public class ItemFirePogo extends Item {
 
-	public ItemFirePogo(int id) {
-		super(id);
+	public ItemFirePogo() {
 		this.setCreativeTab(Pogostick.tabPogostick);
 		this.canRepair = false;
 		this.maxStackSize = 1;
@@ -20,7 +19,7 @@ public class ItemFirePogo extends Item {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister) {
 		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "firepogo");
 
 	}
@@ -40,7 +39,7 @@ public class ItemFirePogo extends Item {
 					
 				}else{
 					item.setItemDamage(item.getMaxDamage());
-					EntityPlayer.inventory.clearInventory(7253, item.getMaxDamage());
+					EntityPlayer.inventory.clearInventory(Pogostick.fpogo, item.getMaxDamage());
 					
 				}
 				

@@ -4,29 +4,30 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.Icon;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.IIcon;
 
 public class BlockTramp extends Block {
 	
-	public BlockTramp(int id, String texture) {
-		super(id, Material.cloth);
+	public BlockTramp(String texture) {
+		super(Material.cloth);
 		this.setCreativeTab(Pogostick.tabPogostick);
 		
 		
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static Icon topIcon;
+	public static IIcon topIcon;
 	@SideOnly(Side.CLIENT)
-	public static Icon bottomIcon;
+	public static IIcon bottomIcon;
 	@SideOnly(Side.CLIENT)
-	public static Icon sideIcon;
+	public static IIcon sideIcon;
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister icon) {
+	public void registerBlockIcons(IIconRegister icon) {
 	topIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_top");
 	bottomIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_bottom");
 	sideIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_side");
@@ -34,7 +35,7 @@ public class BlockTramp extends Block {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata) {
+	public IIcon getIcon(int side, int metadata) {
 	if(side == 0) {
 	return bottomIcon;
 	} else if(side == 1) {

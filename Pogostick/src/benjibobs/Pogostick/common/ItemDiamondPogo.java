@@ -2,16 +2,16 @@ package benjibobs.Pogostick.common;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class ItemDiamondPogo extends Item {
 
-	public ItemDiamondPogo(int id) {
-		super(id);
+	public ItemDiamondPogo() {
 		this.setCreativeTab(Pogostick.tabPogostick);
 		this.setMaxDamage(1561);
 		this.canRepair = false;
@@ -20,7 +20,7 @@ public class ItemDiamondPogo extends Item {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister) {
 		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "diamondpogo");
 
 	}
@@ -39,7 +39,7 @@ public class ItemDiamondPogo extends Item {
 					
 				}else{
 					item.setItemDamage(item.getMaxDamage());
-					EntityPlayer.inventory.clearInventory(this.itemID, item.getMaxDamage());
+					EntityPlayer.inventory.clearInventory(Pogostick.dpogo, item.getMaxDamage());
 					
 				}
 			}else{
@@ -56,7 +56,7 @@ public class ItemDiamondPogo extends Item {
 	@Override
     public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
     {
-        return Item.diamond.itemID == par2ItemStack.itemID ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+        return Items.diamond == par2ItemStack.getItem() ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
     }
 
 }

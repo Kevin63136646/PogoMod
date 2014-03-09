@@ -1,20 +1,13 @@
 package benjibobs.Pogostick.common;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.Item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class ItemPogo extends Item {
 
-	public ItemPogo(int id) {
-		super(id);
+	public ItemPogo() {
 		this.setCreativeTab(Pogostick.tabPogostick);
 		this.maxStackSize = 1;
 	}
@@ -23,7 +16,7 @@ public class ItemPogo extends Item {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister) {
 		itemIcon = iconRegister.registerIcon(Pogostick.modid + ":" + "pogostick");
 
 	}
