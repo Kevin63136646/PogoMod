@@ -2,16 +2,17 @@ package benjibobs.Pogostick.common;
 
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -21,115 +22,91 @@ import cpw.mods.fml.server.FMLServerHandler;
 public class PogostickEvents {
 
 	MinecraftServer mc = FMLServerHandler.instance().getServer();
-	Minecraft mc1 = FMLClientHandler.instance().getClient();
-
+	
 	public static float fallam;
 	public static boolean pjumped = false;
 	public static boolean tntblew;
 	public static boolean explosiondmg;
 	private static boolean cancelb;
-	@SuppressWarnings("unused")
 	private static boolean jumped = false;
-
+	
 	@SubscribeEvent
-	public void bouncerHealthCancel(LivingHurtEvent event) {
-
-		if (event.source == DamageSource.fall
-				&& event.entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entity;
-			int yc = (int) (player.lastTickPosY - 1);
-			int yc2 = (int) (player.lastTickPosY - 2);
+	public void onEntityConstructing(EntityConstructing event){
+		
+		if (event.entity instanceof EntityPlayer && ExtendedPlayerProperties.get((EntityPlayer)event.entity) == null){
 			
-			if(cancelb){
-				cancelb = false;
-				event.setCanceled(true);
-				event.ammount = 0.0F;
-			}
+			ExtendedPlayerProperties.register((EntityPlayer)event.entity);
+		
+		}
+		
+		if (event.entity instanceof EntityPlayer && event.entity.getExtendedProperties(ExtendedPlayerProperties.bouncerProp) == null){
 			
-			if (mc1.theWorld.getBlock((int) player.lastTickPosX, yc,
-					(int) player.lastTickPosZ) == Pogostick.tramp) {
-				event.setCanceled(true);
-				tntblew = false;
-				event.ammount = 0.0F;
-				cancelb = true;
-
-			} else if (mc1.theWorld.getBlock((int) player.lastTickPosX, yc2,
-					(int) player.lastTickPosZ) == Pogostick.tramp) {
-				event.setCanceled(true);
-				event.ammount = 0.0F;
-				tntblew = false;
-				cancelb = true;
-
-
-			}
-			
-			
+			event.entity.registerExtendedProperties(ExtendedPlayerProperties.bouncerProp, new ExtendedPlayerProperties((EntityPlayer) event.entity, false));
 			
 		}
-
+			
 	}
 
 	@SubscribeEvent
-	public void bouncerBounce(LivingFallEvent event) {
-
-		if (event.entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entity;
-			 if((mc1.theWorld.getBlock((int)player.lastTickPosX, (int)player.lastTickPosY - 1, (int)player.lastTickPosZ) == Pogostick.tramp || mc1.theWorld.getBlock((int)player.lastTickPosX, (int)player.lastTickPosY - 2, (int)player.lastTickPosZ) == Pogostick.tramp)){
-			 fallam = 0;
-			 }else{
-			 fallam = event.distance;
-			 }
-
-			int yc = (int) (player.lastTickPosY - 1);
-			int yc2 = (int) (player.lastTickPosY - 2);
-
-			if (event.distance > 0.0F) {
-
-				if (mc1.theWorld.getBlock((int) player.lastTickPosX, yc,
-						(int) player.lastTickPosZ) == Pogostick.tramp) {
-					player.motionY = 1.1;
-					tntblew = false;
-
-				} else if (mc1.theWorld.getBlock((int) player.lastTickPosX,
-						yc2, (int) player.lastTickPosZ) == Pogostick.tramp) {
-					player.motionY = 1.1;
-					tntblew = false;
-
-				}
-
-			}
-
-		}
-
-	}
-
-	@SubscribeEvent
-	public void jumpHandler(LivingJumpEvent event) {
-
-		if (event.entity instanceof EntityPlayer) {
-			pjumped = false;
-			EntityPlayer player = (EntityPlayer) event.entity;
-			if (mc1.theWorld.getBlock((int) player.lastTickPosX,
-					(int) player.lastTickPosY - 1, (int) player.lastTickPosZ) == Pogostick.tramp
-					|| mc1.theWorld.getBlock((int) player.lastTickPosX, (int) player.lastTickPosY - 2, (int) player.lastTickPosZ) == Pogostick.tramp) {
-				player.motionY = 1.1;
-				tntblew = false;
-				cancelb = true;
-			}
-
-			if (player.inventory.armorItemInSlot(0) != null) {
+	public void bouncerHandler(LivingFallEvent event){
+		
+		if((event.entity != null) && (event.entity instanceof EntityPlayer)){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			
+			ExtendedPlayerProperties props = ExtendedPlayerProperties.get(player);
+			
+			int x = getFixedCoord(player.posX);
+			int y = getFixedCoord(player.posY) - 2;
+			int z = getFixedCoord(player.posZ);
+			
+			System.out.println(player.worldObj.getBlock(x, y, z).getUnlocalizedName());
+			System.out.println("" + x + ", " + y + ", " + z + " - " + event.distance);
+			
+			
+			
+			if(player.worldObj.getBlock(x, y, z).equals(Pogostick.tramp)){
 				
-				if (player.inventory.armorItemInSlot(0).getItem() == Pogostick.pogoboots) {
-					player.motionY = 0.7;
-					jumped = true;
-					tntblew = false;
+				props.jumpWasBouncer = true;
+					
+				while(player.isAirBorne){
+					
 				}
+					
+				player.motionY = 1.0;
+				
+			}else if(props.jumpWasBouncer){
+				
+				props.jumpWasBouncer = false;
+				event.setCanceled(true);
+				
 			}
-
+		  
 		}
-
+	  
 	}
 
+	//TODO: Add a pull request? This shouldn't be required.
+	@SubscribeEvent
+	public void cancelBounceDmg(LivingHurtEvent event){
+		
+		if(event.source.equals(DamageSource.fall) && event.entity != null && event.entity instanceof EntityPlayer){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			ExtendedPlayerProperties props = ExtendedPlayerProperties.get(player);
+			
+			int x = getFixedCoord(player.posX);
+			int y = getFixedCoord(player.posY) - 2;
+			int z = getFixedCoord(player.posZ);
+			
+			if(player.worldObj.getBlock(x, y, z).equals(Pogostick.tramp)){
+				event.setCanceled(true);
+			}
+			
+		}
+		
+	}
+	
 	@SubscribeEvent
 	public void bootsHandler(LivingHurtEvent event) {
 
@@ -314,7 +291,7 @@ public class PogostickEvents {
 							
 						}else{
 							World expo = FMLClientHandler.instance().getServer().getEntityWorld();
-							EntityPlayerMP playerm = (EntityPlayerMP)event.entity;
+							EntityPlayer playerm = (EntityPlayer)event.entity;
 							expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 2.0F, true);
 							ItemStack item = player.inventory.getCurrentItem();
 							
@@ -340,7 +317,7 @@ public class PogostickEvents {
 					if(pjumped){
 						if(player.isSneaking()){
 						World expo = FMLClientHandler.instance().getServer().getEntityWorld();
-						EntityPlayerMP playerm = (EntityPlayerMP)event.entity;
+						EntityPlayer playerm = (EntityPlayer)event.entity;
 						expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 3.0F, false);
 						event.setCanceled(true);
 						event.ammount = 0.0F;
@@ -499,6 +476,24 @@ public class PogostickEvents {
 		
 	}
 	
-	
+	public int getFixedCoord(double pos){
+		
+		String spos = String.valueOf(pos);
+		
+		if(spos.contains(".")){
+		
+			String fixpos = (spos.substring(0, spos.indexOf("."))).replace(".", "");
+			
+			int fpos = Integer.parseInt(fixpos);
+			if(("" + fpos).contains("-")){
+				return fpos - 1;
+			}else{
+				return fpos + 1;
+			}
+		}
+		
+		return Integer.parseInt(spos);
+		
+	}	
 	
 }

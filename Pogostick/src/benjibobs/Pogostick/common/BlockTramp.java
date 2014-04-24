@@ -12,9 +12,9 @@ import net.minecraft.util.IIcon;
 public class BlockTramp extends Block {
 	
 	public BlockTramp(String texture) {
+		
 		super(Material.cloth);
 		this.setCreativeTab(Pogostick.tabPogostick);
-		
 		
 	}
 	
@@ -28,9 +28,9 @@ public class BlockTramp extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister icon) {
-	topIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_top");
-	bottomIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_bottom");
-	sideIcon = icon.registerIcon(Pogostick.modid + ":" + "semibouncer_side");
+	topIcon = icon.registerIcon(Pogostick.modid + ":" + "bouncer_top");
+	bottomIcon = icon.registerIcon(Pogostick.modid + ":" + "bouncer_bottom");
+	sideIcon = icon.registerIcon(Pogostick.modid + ":" + "bouncer_side");
 	}
 	
 	@Override
