@@ -25,8 +25,7 @@ public class ItemPogoboots extends ItemArmor{
 	}
 
 	
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot,
-			int layer) {
+	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
 			if (stack.getItem() == Pogostick.pogoboots
 			) {
 			return "bpogostick:textures/models/armor/pogobootsrender_1.png";
