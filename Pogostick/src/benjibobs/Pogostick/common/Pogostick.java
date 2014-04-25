@@ -50,9 +50,9 @@ public class Pogostick {
 	public static Item kpogo;
 	public static Item fpogo;
 	
-	public static boolean ground;
-	
 	public static Block tramp;
+	
+	public static boolean ground;
 	
 	static ArmorMaterial armorPOGO = EnumHelper.addArmorMaterial("armorPOGO", 35, new int[] {1, 1, 1, 1}, 0);
 
@@ -63,7 +63,7 @@ public class Pogostick {
 	public void InitPogostick(FMLPreInitializationEvent event){ 
 	
 	bpogo = new ItemPogo();
-	bpogo.setUnlocalizedName("bpogostick");
+	bpogo.setUnlocalizedName("pogo");
     GameRegistry.registerItem(bpogo, "pogo_bpogostick");
     
     wpogo = new ItemWoodPogo();
@@ -107,7 +107,7 @@ public class Pogostick {
     tramp.setHardness(0.7F);
     tramp.setStepSound(Block.soundTypeCloth);
     tramp.setResistance(0.7F);
-    GameRegistry.registerBlock(tramp, "pogo_Bouncer");
+    GameRegistry.registerBlock(tramp, "pogo_bouncer");
     
     pogoboots = new ItemPogoboots(armorPOGO, 5, 3);
     pogoboots.setUnlocalizedName("pogoboots");

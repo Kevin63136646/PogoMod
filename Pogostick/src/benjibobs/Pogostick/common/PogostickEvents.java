@@ -1,6 +1,7 @@
 package benjibobs.Pogostick.common;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -12,10 +13,13 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.server.FMLServerHandler;
 
@@ -25,7 +29,7 @@ public class PogostickEvents {
 	
 	public static float fallam;
 	public static boolean pjumped = false;
-	public static boolean tntblew;
+	public static boolean activateTNTPogo;
 	public static boolean explosiondmg;
 	private static boolean cancelb;
 	private static boolean jumped = false;
@@ -60,8 +64,8 @@ public class PogostickEvents {
 			int y = getFixedCoord(player.posY) - 2;
 			int z = getFixedCoord(player.posZ);
 			
-			System.out.println(player.worldObj.getBlock(x, y, z).getUnlocalizedName());
-			System.out.println("" + x + ", " + y + ", " + z + " - " + event.distance);
+			//System.out.println(player.worldObj.getBlock(x, y, z).getUnlocalizedName());
+			//System.out.println("" + x + ", " + y + ", " + z + " - " + event.distance);
 			
 			
 			
@@ -72,14 +76,9 @@ public class PogostickEvents {
 				while(player.isAirBorne){
 					
 				}
-					
+				if(!player.isSneaking()){	
 				player.motionY = 1.0;
-				
-			}else if(props.jumpWasBouncer){
-				
-				props.jumpWasBouncer = false;
-				event.setCanceled(true);
-				
+				}
 			}
 		  
 		}
@@ -108,136 +107,129 @@ public class PogostickEvents {
 	}
 	
 	@SubscribeEvent
-	public void bootsHandler(LivingHurtEvent event) {
-
-		if (event.source == DamageSource.fall && event.entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entity;
-			if (player.inventory.armorItemInSlot(0) != null) {
-
+	public void jumpOnBouncer(LivingJumpEvent event){
+		
+		if(event.entity != null && event.entity instanceof EntityPlayer){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			
+			int x = getFixedCoord(player.posX);
+			int y = getFixedCoord(player.posY) - 3;
+			int z = getFixedCoord(player.posZ);
+			
+			if(player.worldObj.getBlock(x, y, z).equals(Pogostick.tramp)){
 				
-				if (player.inventory.armorItemInSlot(0).getItem() == Pogostick.pogoboots) {
-
-					ItemStack pb = player.inventory.armorItemInSlot(0);
-					int dur = pb.getItemDamage() + (int)fallam + 1;
-					int durc = pb.getMaxDamage() - pb.getItemDamage();
-					if(dur < pb.getMaxDamage() && durc > 0){
-						pb.setItemDamage(dur);
-						
-					}else{
-						pb.setItemDamage(pb.getMaxDamage());
-						player.inventory.clearInventory(pb.getItem(), pb.getMaxDamage());
-						
-					}
-					event.setCanceled(true);
-
-				}
+				player.motionY = 1;
+				
 			}
-
+			
 		}
-
+		
+	}
+	
+	@SubscribeEvent
+	public void bootsHandler(LivingFallEvent event){
+		
+		if((event.entity != null) && (event.entity instanceof EntityPlayer)){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			
+			if((player.inventory.armorItemInSlot(0) != null) && (player.inventory.armorItemInSlot(0).getItem().equals(Pogostick.pogoboots)) && (event.distance > 2.6945614)){
+				
+				event.setCanceled(true);
+				
+				int dmg = (int)(event.distance + 1);
+				
+				damageItem(player.inventory.armorItemInSlot(0), dmg, player);
+				
+			}
+			
+		}
+		
 	}
 
+	
 	@SubscribeEvent
-	public void pogoHandling(LivingHurtEvent event) {
-
-		if (event.entity instanceof EntityPlayer
-				&& event.source == DamageSource.fall) {
+	public void pogoHandler(LivingFallEvent event) {
+		
+		if (event.entity instanceof EntityPlayer) {
+			
 			EntityPlayer player = (EntityPlayer) event.entity;
-			//wood pogo start
+
+			if(pjumped && event.distance <= 2.6945615){
+				
+				pjumped = false;
+				
+			}
+			
+			/** Wooden pogo **/
 			
 			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.wpogo){
+				
 				if(pjumped){
 					
 					pjumped = false;
+					
 					event.setCanceled(true);
 				
 				}
 			}
-		
-		//wood pogo end
 			
-			//stone pogo start
+			/** Stone pogo **/
 			
-				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.spogo){
-					if(pjumped){
-						if(!(player.isSneaking())){
+			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.spogo){
+				
+				if(pjumped){
+					
+					if(!(player.isSneaking())){
+						
 						ItemStack item = player.inventory.getCurrentItem();
-						event.setCanceled(true);
 						player.motionY = 0.8;
-						int dur = item.getItemDamage() + 1;
-						int durc = item.getMaxDamage() - item.getItemDamage();
-						if(dur < item.getMaxDamage() && durc > 0){
-							item.setItemDamage(dur);
-							
-						}else{
-							item.setItemDamage(item.getMaxDamage());
-							player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-							
-						}
-					}else{
-						pjumped = false;
-						event.setCanceled(true);
+						damageItem(item, 1, player);
+						pjumped = true;
+					
 					}
-					}
+					
 				}
-			
-			//stone pogo end
-			//iron pogo start
+			}
+
+			/** Iron pogo **/
 				
 				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.ipogo){
+					
 					if(pjumped){
+						
 						ItemStack item = player.inventory.getCurrentItem();
+						
 						if(!(player.isSneaking())){
-							event.setCanceled(true);
+							
 							player.motionY = 0.9;
-							int dur = item.getItemDamage() + 1;
-							int durc = item.getMaxDamage() - item.getItemDamage();
-							if(dur < item.getMaxDamage() && durc > 0){
-								item.setItemDamage(dur);
-								
-							}else{
-								item.setItemDamage(item.getMaxDamage());
-								player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-								
-							}
-						}else{
-							pjumped = false;
-							event.setCanceled(true);
+							damageItem(item, 1, player);
+							pjumped = true;
+							
 						}
 					}
 					
 				}
 				
-			//iron pogo end
-			//gold pogo start
+				/** Gold pogo **/
 				
 				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.gpogo){
 					if(pjumped){
 						ItemStack item = player.inventory.getCurrentItem();
 						if(!(player.isSneaking())){
-							event.setCanceled(true);
-							player.motionY = 0.9;
 							
-							int dur = item.getItemDamage() + 1;
-							int durc = item.getMaxDamage() - item.getItemDamage();
-							if(dur < item.getMaxDamage() && durc > 0){
-								item.setItemDamage(dur);
-								
-							}else{
-								item.setItemDamage(item.getMaxDamage());
-								player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-								
-							}
-						}else{
-							pjumped = false;
-							event.setCanceled(true);
+							pjumped = true;
+							player.motionY = 0.9;
+							damageItem(item, 1, player);
+							
+							
 						}
 					}
 					
 				}
-				
-			//gold pogo end
-			//diamond pogo start
+
+				/** Diamond pogo **/
 				
 				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.dpogo){
 					
@@ -247,211 +239,209 @@ public class PogostickEvents {
 						if(!(player.isSneaking())){
 							
 							event.setCanceled(true);
-							event.ammount = 0.0F;
 							player.motionY = 1;
+							pjumped = true;
+							damageItem(item, 1, player);
 							
-							int dur = item.getItemDamage() + 1;
-							int durc = item.getMaxDamage() - item.getItemDamage();
-							
-							if(dur < item.getMaxDamage() && durc > 0){
-								item.setItemDamage(dur);
-								
-							}else{
-								item.setItemDamage(item.getMaxDamage());
-								player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-								
-							}
-						}else{
-							pjumped = false;
-							event.setCanceled(true);
 						}
 					}
 					
-				}
-				
-			//diamond pogo end	
-				
-				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.tntpogo){
-					if(pjumped){
-						if(player.isSneaking()){
-						tntblew = true;
-						event.setCanceled(true);
-						
-						
-						}
-					}
-					}
-				
-				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.tntpogo){
-					if(pjumped){
-						if(tntblew == false){
-							
-							event.setCanceled(true);
-							pjumped = false;
-							
-						}else{
-							World expo = FMLClientHandler.instance().getServer().getEntityWorld();
-							EntityPlayer playerm = (EntityPlayer)event.entity;
-							expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 2.0F, true);
-							ItemStack item = player.inventory.getCurrentItem();
-							
-							int dur = item.getItemDamage() + 9;
-							int durc = item.getMaxDamage() - item.getItemDamage();
-							if(dur < item.getMaxDamage() && durc > 0){
-								item.setItemDamage(dur);
-								
-							}else{
-								item.setItemDamage(item.getMaxDamage());
-								player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-								
-							}
-							explosiondmg = true;
-							tntblew = false;
-							player.posY = player.lastTickPosY + 1;	
-							}
-					}
-						
-					}
-				
-				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.dmgpogo){
-					if(pjumped){
-						if(player.isSneaking()){
-						World expo = FMLClientHandler.instance().getServer().getEntityWorld();
-						EntityPlayer playerm = (EntityPlayer)event.entity;
-						expo.createExplosion(playerm, playerm.posX, playerm.posY, playerm.posZ, 3.0F, false);
-						event.setCanceled(true);
-						event.ammount = 0.0F;
-						explosiondmg = true;
-						ItemStack item = player.inventory.getCurrentItem();
-						int dur = item.getItemDamage() + 4;
-						int durc = item.getMaxDamage() - item.getItemDamage();
-						if(dur < item.getMaxDamage() && durc > 0){
-							item.setItemDamage(dur);
-							
-						}else{
-							item.setItemDamage(item.getMaxDamage());
-							player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-							
-						}
-						}else{
-							event.setCanceled(true);
-							event.ammount = 0.0F;
-							pjumped = false;
-						}
-					}
-				}
-				
+				}	
 
 		}
 		
-		
-		
-		if(event.entity instanceof EntityPlayer && explosiondmg == true){
-			event.ammount = 0.0F;
-			explosiondmg = false;
-		}
-		
-		
-
 	}
 	
 	@SubscribeEvent
-	public void pogoOfKB(LivingHurtEvent event){
+	public void pogoTNT(LivingHurtEvent event){
 		
-		if(event.entity instanceof EntityPlayer && event.source == DamageSource.fall){
+		if(event.entity instanceof EntityPlayer && event.source.equals(DamageSource.fall)){
 			
 			EntityPlayer player = (EntityPlayer)event.entity;
-			World world = FMLClientHandler.instance().getServer().getEntityWorld();
 			
+		if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem().equals(Pogostick.tntpogo)){
 			
-			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.kpogo){
-				if(pjumped){
-					
+			if(pjumped){
+				
 				if(player.isSneaking()){
 					
-					event.setCanceled(true);
-					event.ammount = 0.0F;
-					knockMobs(4.0D, world, player);
-					ItemStack item = player.inventory.getCurrentItem();
-					int dur = item.getItemDamage() + 1;
-					int durc = item.getMaxDamage() - item.getItemDamage();
-					if(dur < item.getMaxDamage() && durc > 0){
-						item.setItemDamage(dur);
-						
-					}else{
-						item.setItemDamage(item.getMaxDamage());
-						player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
-						
-					}
+					activateTNTPogo = true;
+				
+				}else{
 					
 					pjumped = false;
-				}else{
-					event.setCanceled(true);
-					event.ammount = 0.0F;
-					pjumped = false;
+					
 				}
-			}
 			}
 		}
 		
+		if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem().equals(Pogostick.tntpogo)){
+			
+			if(pjumped){
+				
+				if(activateTNTPogo){
+					
+					World world = FMLClientHandler.instance().getServer().worldServerForDimension(player.dimension);
+					world.createExplosion(player, player.posX, player.posY, player.posZ, 2.0F, true);
+					
+					ItemStack item = player.inventory.getCurrentItem();
+					
+					damageItem(item, 1, player);
+					
+					explosiondmg = true;
+					activateTNTPogo = false;
+					player.posY = player.lastTickPosY + 1;	
+					
+				}
+			
+			}
+				
+			
+		}
+		
+		}else if(event.entity instanceof EntityPlayer){
+			
+			if(explosiondmg){
+				
+				explosiondmg = false;
+				event.setCanceled(true);
+				
+			}
+			
+		}
+		
+	}
+	
+
+	@SubscribeEvent
+	public void pogoKB(LivingHurtEvent event){
+		
+		if(event.entity instanceof EntityPlayer && event.source.equals(DamageSource.fall) && !FMLClientHandler.instance().getServer().isDedicatedServer()){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			World world = FMLClientHandler.instance().getServer().worldServerForDimension(player.dimension);
+			
+			
+			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem().equals(Pogostick.kpogo)){
+				
+				if(pjumped){
+					
+					if(player.isSneaking()){
+					
+						event.setCanceled(true);
+						knockMobs(4.0D, world, player);
+						ItemStack item = player.inventory.getCurrentItem();
+						pjumped = false;
+						damageItem(item, 1, player);
+						
+					}else{
+						
+						event.setCanceled(true);
+						pjumped = false;
+						
+					}
+				}
+			}
+			
+		}
 	}
 	
 	@SubscribeEvent
 	public void flamingPogo(LivingHurtEvent event){
 		
 		if(event.entity instanceof EntityPlayer && event.source == DamageSource.fall){
+			
+			EntityPlayer player = (EntityPlayer)event.entity;
+			
 			if(pjumped){
-				
-				EntityPlayer player = (EntityPlayer)event.entity;
-				
-				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == Pogostick.fpogo){
-				if(player.isSneaking()){
-					pjumped = false;
-					event.setCanceled(true);
-					event.ammount = 0.0F;
-					World world = FMLClientHandler.instance().getServer().getEntityWorld();
-					burnMobs(4.0D, world, player);
-					ItemStack item = player.inventory.getCurrentItem();
-					int dur = item.getItemDamage() + 2;
-					int durc = item.getMaxDamage() - item.getItemDamage();
-					if(dur < item.getMaxDamage() && durc > 0){
-						item.setItemDamage(dur);
+
+				if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem().equals(Pogostick.fpogo)){
+					
+					if(player.isSneaking()){
 						
+						pjumped = false;
+						event.setCanceled(true);
+						event.ammount = 0.0F;
+						World world = FMLClientHandler.instance().getServer().worldServerForDimension(player.dimension);
+						burnMobs(4.0D, world, player);
+						ItemStack item = player.inventory.getCurrentItem();
+						damageItem(item, 1, player);
+					
 					}else{
-						item.setItemDamage(item.getMaxDamage());
-						player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
+						
+						pjumped = false;
+						event.setCanceled(true);
+						event.ammount = 0.0F;
 						
 					}
-				}else{
-					pjumped = false;
-					event.setCanceled(true);
-					event.ammount = 0.0F;
 				}
 			}
-			}
 		}
-		
 	}
-	
-	
+
+	@SubscribeEvent
+	public void pogoDmg(LivingHurtEvent event){
+		
+		if(event.entity instanceof EntityPlayer){
+		
+			EntityPlayer player = (EntityPlayer)event.entity;
 			
-		
-		
-	
+			if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem().equals(Pogostick.dmgpogo)){
+				
+				if(pjumped){
+					
+					if(player.isSneaking()){
+						
+						World world = FMLClientHandler.instance().getServer().worldServerForDimension(player.dimension);
+						world.createExplosion(player, player.posX, player.posY, player.posZ, 3.0F, false);
+						event.setCanceled(true);
+						explosiondmg = true;
+						ItemStack item = player.inventory.getCurrentItem();
+						damageItem(item, 1, player);
+						pjumped = false;
+						
+					}else{
+						
+						event.setCanceled(true);
+						pjumped = false;
+						
+					}
+				}
+			}
+		}	
+	}
 	
 	public void knockMobs(double area, World world, EntityPlayer player){
 		
-		@SuppressWarnings("unchecked")
 		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(area, area, area));
-		
-		for(Entity mob:entities){
+		world.createExplosion(player, player.posX, player.posY, player.posZ, 0.1F, false);
+		for(Entity mob : entities){
 			
-			if(mob != null){
+			if(mob != null && mob != player && mob instanceof EntityLiving){
 				
-				mob.motionX = 0.8;
-				mob.motionY = 0.6;
-				mob.motionZ = 0.8;
+				Random rand = new Random();
+				
+				int temp = rand.nextInt(2);
+				
+				if(temp == 0){
+				
+					mob.motionX = 0.8;
+					mob.motionY = 0.6;
+					mob.motionZ = 0.8;
 			
+				}else if(temp == 1){
+					
+					mob.motionX = -0.8;
+					mob.motionY = 0.6;
+					mob.motionZ = 0.8;
+					
+				}else{
+					
+					mob.motionX = 0.8;
+					mob.motionY = 0.6;
+					mob.motionZ = -0.8;
+					
+				}
 				
 			}
 		}
@@ -460,15 +450,37 @@ public class PogostickEvents {
 	
 	public void burnMobs(double area, World world, EntityPlayer player){
 		
-		@SuppressWarnings("unchecked")
 		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(area, area, area));
 		
 		for(Entity mob:entities){
 			
-			if(mob != null && mob instanceof EntityLiving){
+			if(mob != null && mob instanceof EntityLiving && mob != player){
 				
 				mob.setFire(3);
-				mob.motionX = 0.5;
+
+				Random rand = new Random();
+				
+				int temp = rand.nextInt(2);
+				
+				if(temp == 0){
+				
+					mob.motionX = 0.8;
+					mob.motionY = 0.6;
+					mob.motionZ = 0.8;
+			
+				}else if(temp == 1){
+					
+					mob.motionX = -0.8;
+					mob.motionY = 0.6;
+					mob.motionZ = 0.8;
+					
+				}else{
+					
+					mob.motionX = 0.8;
+					mob.motionY = 0.6;
+					mob.motionZ = -0.8;
+					
+				}
 				
 			}
 			
@@ -476,7 +488,7 @@ public class PogostickEvents {
 		
 	}
 	
-	public int getFixedCoord(double pos){
+	public static int getFixedCoord(double pos){
 		
 		String spos = String.valueOf(pos);
 		
@@ -496,4 +508,31 @@ public class PogostickEvents {
 		
 	}	
 	
+	public static void damageItem(ItemStack item, int amount, EntityPlayer player) {
+		
+		if(item == null || amount == 0){
+			return;
+		}
+		
+		Random rand = new Random();
+		
+		if(item.attemptDamageItem(amount, rand)){
+			item.setItemDamage(item.getMaxDamage());
+			player.inventory.clearInventory(item.getItem(), item.getMaxDamage());
+		}
+		
+	}
+	
+	@SubscribeEvent
+	public void pogoDamageHandler(LivingHurtEvent event){
+		
+		if(event.entity instanceof EntityPlayer && pjumped){
+			EntityPlayer player = (EntityPlayer)event.entity;
+			if(!(player.inventory.getCurrentItem().equals(null) || player.inventory.getCurrentItem().getItem().equals(Pogostick.tntpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.kpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.dmgpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.fpogo))){		
+			event.setCanceled(true);
+			}
+		}
+		
+	}
+
 }
