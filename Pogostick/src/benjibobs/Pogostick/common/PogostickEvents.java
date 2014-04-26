@@ -7,19 +7,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.server.FMLServerHandler;
 
@@ -411,6 +410,18 @@ public class PogostickEvents {
 		}	
 	}
 	
+	@SubscribeEvent
+	public void pogoDamageHandler(LivingHurtEvent event){
+		
+		if(event.entity instanceof EntityPlayer && pjumped){
+			EntityPlayer player = (EntityPlayer)event.entity;
+			if(!(player.inventory.getCurrentItem().equals(null) || player.inventory.getCurrentItem().getItem().equals(Pogostick.tntpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.kpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.dmgpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.fpogo))){		
+			event.setCanceled(true);
+			}
+		}
+		
+	}
+	
 	public void knockMobs(double area, World world, EntityPlayer player){
 		
 		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(area, area, area));
@@ -522,17 +533,66 @@ public class PogostickEvents {
 		}
 		
 	}
-	
+
 	@SubscribeEvent
-	public void pogoDamageHandler(LivingHurtEvent event){
+	public void onPlayerJoin(EntityJoinWorldEvent event){
 		
-		if(event.entity instanceof EntityPlayer && pjumped){
+		if(event.entity instanceof EntityPlayer){
+			
 			EntityPlayer player = (EntityPlayer)event.entity;
-			if(!(player.inventory.getCurrentItem().equals(null) || player.inventory.getCurrentItem().getItem().equals(Pogostick.tntpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.kpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.dmgpogo) || player.inventory.getCurrentItem().getItem().equals(Pogostick.fpogo))){		
-			event.setCanceled(true);
+			
+			if(Util.hasUpdate()){
+				
+				for(int i = 0; i < Util.changelog.length; i++){
+					//TODO: Change durability code EVERYWHERE! Including Item classes!
+					//TODO: Enable repairing
+					//TODO: Fix bugs!
+					//TODO: Comment code
+					//TODO: Fully sort git
+					//TODO: Better site load speeds and integration
+					//TODO: Think of new pogos/blocks/whatever!
+					//TODO: Think of more stuff todo!
+					ChatComponentText msg = new ChatComponentText(EnumChatFormatting.DARK_RED + Util.changelog[i]);
+					player.addChatMessage(msg);
+					
+				}
+				
 			}
+			
 		}
 		
 	}
+	
+	public static void setJoinedBefore(EntityPlayer player, boolean b) {
 
+		NBTTagCompound compound = player.getEntityData();
+		
+		if(compound.hasKey("Pogo-hasJoinedWorldBefore")){
+			
+			compound.setBoolean("Pogo-hasJoinedWorldBefore", b);
+		
+		}
+		
+		player.writeToNBT(compound);
+		
+	}
+
+	public static boolean isFirstJoin(EntityPlayer player) {
+		
+		if(!player.getEntityData().hasKey("Pogo-hasJoinedWorldBefore")){
+			
+			return true;
+			
+		}else{
+			
+			if(player.getEntityData().getBoolean("Pogo-hasJoinedWorldBefore")){
+				return false;
+			}
+			
+			return true;
+	
+		}
+		
+	}
+	
 }

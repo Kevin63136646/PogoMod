@@ -20,7 +20,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid=Pogostick.modid,name="Pogostick",version="1.5")
+@Mod(modid=Pogostick.modid,name="Pogostick",version=Pogostick.version)
 
 
 public class Pogostick {
@@ -37,6 +37,7 @@ public class Pogostick {
 };
 	
 	public static final String modid = "bpogostick";
+	public static final String version = "1.6";
 	
 	public static Item bpogo;
 	public static Item wpogo;

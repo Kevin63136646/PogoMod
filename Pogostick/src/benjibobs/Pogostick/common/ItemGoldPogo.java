@@ -13,7 +13,7 @@ public class ItemGoldPogo extends Item {
 	public ItemGoldPogo() {
 		this.setCreativeTab(Pogostick.tabPogostick);
 		this.setMaxDamage(32);
-		// TODO: Fix this for all pogos, allow to be repaired.
+		//TODO: Fix this for all pogos, allow to be repaired.
 		this.canRepair = false;
 		this.maxStackSize = 1;
 	}

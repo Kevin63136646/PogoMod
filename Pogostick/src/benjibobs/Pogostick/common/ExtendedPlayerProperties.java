@@ -39,7 +39,6 @@ public class ExtendedPlayerProperties implements IExtendedEntityProperties {
 		// Get our data from the custom tag compound
 		this.jumpWasBouncer = properties.getBoolean(this.bouncerProp);
 		// Just so you know it's working, add this line:
-		System.out.println("[Pogostick] NBT data loaded - " + this.jumpWasBouncer);
 		
 	}
 	
